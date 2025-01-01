@@ -1,0 +1,63 @@
+name: "React Project Deploy"
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - .gitignore
+      - README.md
+  workflow_dispatch:
+
+concurrency:
+  group: react-project-deploy
+  cancel-in-progress: true
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Get API Gateway endpoint from AWS SSM Parameter Store
+        id: get_api_gateway_endpoint
+        run: |
+          REACT_APP_API_GATEWAY_ENDPOINT=$(aws ssm get-parameter --name "/remember-me/api_gateway_endpoint_invoke_url" --query "Parameter.Value" --output text)
+          echo "REACT_APP_API_GATEWAY_ENDPOINT=$REACT_APP_API_GATEWAY_ENDPOINT" >> $GITHUB_ENV
+      
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Get S3 bucket name from Parameter Store
+        id: get_s3_bucket
+        run: |
+          S3_BUCKET=$(aws ssm get-parameter --name "/remember-me/s3-bucket-name" --query "Parameter.Value" --output text)
+          echo "S3_BUCKET=$S3_BUCKET" >> $GITHUB_ENV
+      
+      - name: Get CloudFront distribution ID from Parameter Store
+        id: get_cloudfront_id
+        run: |
+          CLOUDFRONT_DISTRIBUTION_ID=$(aws ssm get-parameter --name "/remember-me/cloudfront-distribution-id" --query "Parameter.Value" --output text)
+          echo "CLOUDFRONT_DISTRIBUTION_ID=$CLOUDFRONT_DISTRIBUTION_ID" >> $GITHUB_ENV
+
+      - name: Deploy to S3
+        run: aws s3 sync build/ s3://$S3_BUCKET --delete
+
+      - name: Invalidate CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*"

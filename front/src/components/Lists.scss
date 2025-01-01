@@ -1,0 +1,162 @@
+.container_lists {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .lists {
+    padding: 10px;
+    width: 95%;
+    display: flex;
+    flex-wrap: wrap; /* 줄바꿈을 허용해 박스가 넘치지 않도록 */
+    justify-content: space-around; /* 아이템 간 간격 균등 분배 */
+    gap: 1px; /* 박스 간 간격 */
+    padding: 3px;
+
+    .list-box-drag {
+      width: 95%;
+      padding: 5px;
+
+      .list-box-select {
+        width: 100%;
+        padding: 1px;
+      }
+    }
+  }
+
+  // 모바일 스타일
+  &.mobile {
+    flex-direction: column;
+
+    .btns {
+      width: 100%;
+      z-index: 10;
+      position: fixed;
+      bottom: 60px; /* 모바일에서는 조금 더 위로 배치 */
+      height: 70px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+    }
+  }
+
+  // 데스크탑 스타일
+  &.desktop {
+    .contents-lists {
+      width: 100%;
+      .lists {
+        width: 100%;
+      }
+    }
+
+    .list-box-drag {
+      width: auth;
+    }
+    .btns {
+      width: 100%;
+      z-index: 10;
+      position: fixed;
+      bottom: 50px;
+      height: 90px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+    }
+  }
+
+  .btns {
+    width: 100%;
+    z-index: 10;
+    position: fixed;
+    bottom: 50px;
+    height: 90px;
+    display: flex;
+    justify-content: space-around; // 버튼을 가운데에 위치시킴
+    align-items: center;
+    padding: 0 20px;
+
+    .btn {
+      width: 60px; // 버튼의 크기
+      height: 60px; // 버튼의 크기
+      background-color: #fff; // 버튼 중앙 색상 (하얀색)
+      border: 3px solid transparent; // 기본 테두리는 투명으로 설정
+      border-radius: 50%; // 원형 버튼
+      background-clip: padding-box; // 배경을 테두리 바깥으로 자름
+      display: flex;
+      justify-content: center; // 아이콘을 버튼의 가운데에 배치
+      align-items: center;
+      padding: 10px; // 버튼 내부 여백 설정
+      position: relative;
+      transition: all 0.3s ease; // 부드러운 애니메이션
+      cursor: pointer; // 버튼 클릭 시 포인터 커서
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+
+      &::before {
+        content: ""; // 가상 요소 생성
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border-radius: 50%; // 원형 모양
+        background-image: linear-gradient(
+          45deg,
+          rgba(0, 123, 255, 1),
+          rgba(255, 0, 123, 1)
+        ); // 테두리 그라데이션
+        z-index: -1; // 버튼 내부보다 뒤로 보내기
+      }
+
+      .icon {
+        width: 30px;
+        height: 30px;
+        font-size: 30px; /* 아이콘 크기 */
+        color: #d500f9; /* 티파니 블루 색상 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      &:hover {
+        width: 65px;
+        height: 65px;
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); // hover 시 그림자 효과
+        .icon {
+          width: 35px;
+          height: 35px;
+        }
+      }
+
+      &:active {
+        transform: scale(0.95); // 클릭 시 버튼 크기 약간 줄어듦
+      }
+    }
+
+    .selectActive {
+      transform: scale(1.2);
+      .icon {
+        color: white;
+      }
+    }
+  }
+}
+
+.tracking-in-expand {
+  animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+}
+
+@keyframes tracking-in-expand {
+  0% {
+    letter-spacing: -0.5em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

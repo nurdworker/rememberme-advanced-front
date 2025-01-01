@@ -1,0 +1,44 @@
+.container-incorrect-lists {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .incorrect-lists {
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap; /* 줄바꿈을 허용해 박스가 넘치지 않도록 */
+    justify-content: space-around; /* 아이템 간 간격 균등 분배 */
+    gap: 1px; /* 박스 간 간격 */
+    padding: 3px;
+    .incorrect-list-box {
+      width: 95%;
+    }
+  }
+
+  // 모바일 스타일
+  &.mobile {
+    flex-direction: column;
+  }
+
+  // 데스크탑 스타일
+  &.desktop {
+  }
+}
+
+.tracking-in-expand {
+  animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+}
+
+@keyframes tracking-in-expand {
+  0% {
+    letter-spacing: -0.5em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

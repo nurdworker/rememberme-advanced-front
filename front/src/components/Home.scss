@@ -1,0 +1,159 @@
+.container_home {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .contents-home {
+    position: relative;
+    border-radius: 15px;
+    width: 100%;
+
+    .title-box {
+      display: flex;
+      align-items: center;
+      background-color: #f9fafb; // bg-gray-100
+      padding: 0.6rem;
+      width: 100%; // w-full
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); // shadow-md
+
+      .lang-img {
+        width: 50px; /* 이미지 크기 설정 */
+        height: 50px; /* 이미지 크기 설정 */
+        border-radius: 50%; /* 원형 모양 */
+        object-fit: cover; /* 이미지 크기에 맞춰서 잘리도록 설정 */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+      }
+      .title-favorite {
+        font-size: 1.875rem; // text-3xl
+        font-weight: bold; // font-bold
+        background: linear-gradient(
+          to right,
+          #ef4444,
+          #f59e0b,
+          #ec4899
+        ); // 그라데이션
+        -webkit-background-clip: text; // 텍스트 영역에만 그라데이션 적용
+        -webkit-text-fill-color: transparent; // 글자 색상을 투명으로 설정
+        text-align: left; // text-left
+        padding: 1rem; // p-4
+        font-style: italic; // italic
+        animation: tracking-in-expand 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+          both;
+      }
+      .title-lang {
+        font-size: 1.5rem; // text-2xl
+        font-weight: 600; // font-semibold
+        background: linear-gradient(
+          to right,
+          #3b82f6,
+          #10b981,
+          #14b8a6
+        ); // bg-gradient-to-r from-blue-500 via-green-500 to-teal-500
+        -webkit-background-clip: text; // 텍스트 부분에만 배경 적용
+        -webkit-text-fill-color: transparent; // 글자 색상을 투명으로 설정
+        text-align: left; // text-left
+        padding: 1rem; // p-4
+        font-style: italic; // italic
+        animation: tracking-in-expand 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+          both;
+      }
+    }
+
+    .title-favorite {
+      width: 100%;
+    }
+
+    .lists {
+      padding: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+  }
+
+  .google-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: white; // 기본 배경 색상
+    color: black;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 250px;
+    margin: 10px auto;
+    transition: background-color 0.3s, transform 0.3s; // transform 애니메이션 추가
+
+    &:hover {
+      background-color: #e0e0e0; // hover 시 색상 변화 (살짝 더 진한 회색)
+      transform: scale(1.05); // 크기 살짝 커지게
+    }
+
+    .google-logo {
+      height: 20px;
+      margin-right: 10px;
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  &.mobile {
+    .contents-home {
+      padding: 10px;
+
+      .title-box {
+        flex-direction: row; // 모바일에서는 세로 정렬
+        padding: 0.5rem;
+        .lang-img {
+          width: 40px;
+          height: 40px;
+        }
+        .title-lang,
+        .title-favorite {
+          font-size: 1.25rem; // 글자 크기 축소
+        }
+      }
+    }
+  }
+
+  &.desktop {
+    .contents-home {
+      padding: 20px;
+
+      .title-box {
+        flex-direction: row; // 데스크톱에서는 가로 정렬
+        .lang-img {
+          width: 50px;
+          height: 50px;
+        }
+        .title-lang,
+        .title-favorite {
+          font-size: 1.875rem; // 글자 크기 확대
+        }
+      }
+    }
+  }
+}
+
+.tracking-in-expand {
+  animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+}
+
+@keyframes tracking-in-expand {
+  0% {
+    letter-spacing: -0.5em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

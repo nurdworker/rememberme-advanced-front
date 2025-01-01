@@ -1,0 +1,68 @@
+.incorrect-list-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0px 4px 20px rgba(255, 99, 71, 0.3); /* 기존 설정 유지 */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin: 5px;
+  background-size: 400% 400%; // 애니메이션 효과를 위해 크기 조정
+
+  .incorrect-list-card-body {
+    display: flex;
+    width: 100%;
+    .incorrect-list-card-flag {
+      width: 20%;
+      height: 60px;
+      filter: blur(3px);
+      opacity: 0.8;
+      background-size: cover;
+      background-position: center;
+    }
+    .incorrect-list-card-info {
+      flex: 1;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-left: 5px;
+      .incorrect-list-card-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        font-size: 1em;
+        font-weight: bold;
+        width: 70%;
+        font-style: italic; /* 글자 기울이기 */
+        span {
+          font-size: 0.7em;
+          color: #ff6347; /* 이걸 원하는 색상으로 변경 */
+          margin-left: 5px;
+          font-style: italic; /* 글자 기울이기 */
+        }
+      }
+      .incorrect-list-card-date {
+        font-size: 0.7em;
+        color: #666;
+      }
+    }
+  }
+
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
