@@ -1,6 +1,6 @@
 // public modules
 import React from "react";
-import { AxiosError } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 
 // custom
 import { auth } from "../auth";
@@ -33,7 +33,7 @@ const TestButton: React.FC<TestButtonProps> = ({
 const TestZone: React.FC = () => {
   // funcs
   const test_funcs = {
-    test_front_env: () => {
+    test_front_env: (): void => {
       const dog: string | undefined = process.env.REACT_APP_DOG;
       alert(dog ? dog : "Dog environment variable is not set.");
     },
@@ -44,7 +44,7 @@ const TestZone: React.FC = () => {
           : "API Gateway endpoint environment variable is not set."
       );
     },
-    test_connect_to_lambda: () => {
+    test_connect_to_lambda: (): void => {
       if (staticData.endpoint) {
         fetch(`${staticData.endpoint}/test?request=connectLambda`)
           .then((response) => {
@@ -53,11 +53,13 @@ const TestZone: React.FC = () => {
           })
           .then((data) => alert(data.message))
           .catch((error) =>
-            alert("Error connecting to Lambda: " + JSON.stringify(error))
+            alert(
+              "Error connecting to Lambda: " + JSON.stringify(error.message)
+            )
           );
       }
     },
-    test_read_server_env: () => {
+    test_read_server_env: (): void => {
       if (staticData.endpoint) {
         fetch(`${staticData.endpoint}/test?request=readServerEnv`)
           .then((response) => {
@@ -70,7 +72,7 @@ const TestZone: React.FC = () => {
           );
       }
     },
-    test_connect_to_db: () => {
+    test_connect_to_db: (): void => {
       if (staticData.endpoint) {
         fetch(`${staticData.endpoint}/test?request=connectDb`)
           .then((response) => {
@@ -83,10 +85,10 @@ const TestZone: React.FC = () => {
           );
       }
     },
-    test_oauth_middle_ware: async () => {
+    test_oauth_middle_ware: async (): Promise<void> => {
       if (staticData.endpoint) {
         try {
-          const response = await auth.api.get(
+          const response: AxiosResponse = await auth.api.get(
             `${staticData.endpoint}/test?request=testAuthFlow`
           );
 

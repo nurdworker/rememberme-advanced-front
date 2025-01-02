@@ -27,7 +27,7 @@ import { FaList } from "react-icons/fa";
 import { AiOutlineHome } from "react-icons/ai";
 
 // components
-// import TestZone from "./components/TestZone";
+import TestZone from "./components/TestZone";
 import Home from "./components/Home";
 import Lists from "./components/Lists";
 import Words from "./components/Words";
@@ -41,6 +41,7 @@ const AppContent = () => {
   // default
   const location = useLocation();
   const dispatch = useDispatch();
+  const isDev = process.env.REACT_APP_ENV === "dev";
 
   //mode state
   const isSign = useSelector((state: any) => state.mode.isSign);
@@ -55,7 +56,7 @@ const AppContent = () => {
   //component state
 
   // funcs
-  const handleSignOut = () => {
+  const handleSignOut = (): void => {
     localStorage.clear();
     dispatch({ type: "SET_USER_INFO", value: null });
     dispatch({ type: "SET_DATA", value: {} });
@@ -252,7 +253,7 @@ const AppContent = () => {
               {/* <Route path="/incorectlists/:id" element={<IncorrectWords />} /> */}
             </Routes>
           </ErrorBoundary>
-          {/* <TestZone /> */}
+          {isDev && <TestZone />}
         </div>
       </div>
     </div>
