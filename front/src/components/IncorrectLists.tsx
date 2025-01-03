@@ -11,37 +11,28 @@ import { useFuncs } from "../funcs";
 // components
 import IncorrectListBox from "./small/IncorrectListBox";
 
-// type
-interface List {
-  _id: string;
-  name: string;
-  creation_date: string;
-  language: string;
-  linked_incorrect_word_lists: any[];
-  is_bookmark: boolean;
-  user_id: string;
-  is_deleted: boolean;
-}
+// types
+import { FetchDataReturn, List, ReduxState } from "../types/index";
 
 const IncorrectLists = () => {
   const navigate = useNavigate();
 
   // mode state
-  const isSign = useSelector((state: any) => state?.mode.isSign);
-  const isFetching = useSelector((state: any) => state.mode.isFetching);
-  const isMobile = useSelector((state: any) => state.mode.isMobile);
+  const isSign = useSelector((state: ReduxState) => state?.mode.isSign);
+  const isFetching = useSelector((state: ReduxState) => state.mode.isFetching);
+  const isMobile = useSelector((state: ReduxState) => state.mode.isMobile);
 
   // public data
-  const lists = useSelector((state: any) => state.data.lists);
+  const lists = useSelector((state: ReduxState) => state.data.lists);
 
   // custom hook funcs
   const { fetchListsData } = useFuncs();
 
   // effect for fetching list data
   useEffect(() => {
-    const asyncHandler = async () => {
+    const asyncHandler = async (): Promise<void> => {
       if (!lists || lists.length === 0) {
-        const fetchingResult = await fetchListsData();
+        const fetchingResult: FetchDataReturn = await fetchListsData();
         if (fetchingResult?.message === "success") {
           console.log("fetching is succeed");
           return;

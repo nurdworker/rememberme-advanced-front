@@ -6,15 +6,15 @@ import "./AlertModal.scss";
 
 // type
 interface AlertModalProps {
-  message: string;
+  message: string | null;
   onClose: () => void;
 }
 
 const AlertModal: React.FC<AlertModalProps> = ({ message, onClose }) => {
   //component state
-  const [isVisible, setIsVisible] = useState(false); // 처음에는 숨겨져 있다가 fade-in됨
-  const [isFadingOut, setIsFadingOut] = useState(false); // fade-out 여부 추적
-  const [isHidden, setIsHidden] = useState(false); // alert가 완전히 숨겨졌는지 추적
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
+  const [isHidden, setIsHidden] = useState<boolean>(false);
 
   // useEffects
   useEffect(() => {
@@ -50,7 +50,10 @@ const AlertModal: React.FC<AlertModalProps> = ({ message, onClose }) => {
           isFadingOut ? "fade-out" : ""
         }`}
       >
-        <div className="alert-message">{message}</div>
+        <div className="alert-message">
+          <img src="/nw-emo.png" alt="emoticon" />
+          <p>{message}</p>
+        </div>
       </div>
     </div>
   );

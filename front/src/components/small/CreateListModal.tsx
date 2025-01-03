@@ -10,7 +10,9 @@ import { useFuncs } from "../../funcs";
 import { auth } from "../../auth";
 import { staticData } from "../../staticData";
 
-// type
+// types
+import { ReduxState, List } from "../../types";
+import { AxiosResponse } from "axios";
 interface CreateListModalProps {
   isOpen: boolean;
   closeModal: () => void;
@@ -24,7 +26,7 @@ const CreateListModal: React.FC<CreateListModalProps> = ({
   const dispatch = useDispatch();
 
   //public data
-  const lists = useSelector((state: any) => state?.data.lists);
+  const lists = useSelector((state: ReduxState) => state?.data.lists);
 
   //custom hook funcs
   const { showAlert } = useFuncs();
@@ -47,14 +49,13 @@ const CreateListModal: React.FC<CreateListModalProps> = ({
         name: listName,
         language: language,
       };
-      console.log(data);
 
       try {
         dispatch({
           type: "SET_LOADING",
           value: true,
         });
-        const response = await auth.api.post(
+        const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/list?request=putList`,
           {
             ...data,
@@ -62,8 +63,8 @@ const CreateListModal: React.FC<CreateListModalProps> = ({
         );
 
         if (response?.status === 200 || response?.status === 201) {
-          const newList = response.data.answer.list;
-          const updatedLists = [...lists, newList];
+          const newList: List = response.data.answer.list;
+          const updatedLists: List[] = [...lists, newList];
 
           dispatch({
             type: "SET_DATA_LISTS",

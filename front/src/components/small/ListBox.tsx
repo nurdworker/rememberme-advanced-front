@@ -12,16 +12,9 @@ import { staticData } from "../../staticData";
 // icons
 import { FaStar, FaRegStar } from "react-icons/fa";
 
-// type
-interface ListBoxProps {
-  name: string;
-  creation_date: string;
-  language: string;
-  linked_incorrect_word_lists: string[];
-  is_bookmark: boolean;
-  _id: string;
-  user_id: string;
-  is_deleted: boolean;
+// types
+import { List, ReduxState } from "../../types/index";
+interface ListBoxProps extends List {
   isSelected?: boolean;
 }
 
@@ -42,17 +35,19 @@ const ListBox: React.FC<ListBoxProps> = ({
   const location = useLocation();
 
   //mode state
-  const isMobile = useSelector((state: any) => state.mode.isMobile);
+  const isMobile: boolean = useSelector(
+    (state: ReduxState) => state.mode.isMobile
+  );
 
   //public data
   const { editedListsQueue } = useQueue();
-  const lists = useSelector((state: any) => state.data.lists);
+  const lists: List[] = useSelector((state: ReduxState) => state.data.lists);
 
   //component state
   const [isBookmark, setIsBookmark] = useState<boolean>(initialBookmark);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newTitle, setNewTitle] = useState<string>(name);
-  const flagImage =
+  const flagImage: string =
     language === "en"
       ? staticData.flag_imgs.en
       : language === "jp"
@@ -70,11 +65,11 @@ const ListBox: React.FC<ListBoxProps> = ({
   };
 
   // funcs
-  const toggleBookmark = (e: React.MouseEvent) => {
+  const toggleBookmark = (e: React.MouseEvent): void => {
     e.stopPropagation();
 
     list.is_bookmark = !isBookmark;
-    const newLists = staticData.updateListInArray(lists, list);
+    const newLists: List[] = staticData.updateListInArray(lists, list);
     dispatch({
       type: "SET_DATA_LISTS",
       value: newLists,
@@ -83,23 +78,23 @@ const ListBox: React.FC<ListBoxProps> = ({
     setIsBookmark(!isBookmark);
   };
 
-  const clickTitle = (e: React.MouseEvent) => {
+  const clickTitle = (e: React.MouseEvent): void => {
     e.stopPropagation();
     setIsEditing(true);
   };
 
-  const clickInput = (e: React.MouseEvent) => {
+  const clickInput = (e: React.MouseEvent): void => {
     e.stopPropagation();
   };
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setNewTitle(e.target.value);
   };
 
-  const handleTitleSave = () => {
+  const handleTitleSave = (): void => {
     if (newTitle !== name) {
       list.name = newTitle;
-      const newLists = staticData.updateListInArray(lists, list);
+      const newLists: List[] = staticData.updateListInArray(lists, list);
       dispatch({
         type: "SET_DATA_LISTS",
         value: newLists,
@@ -109,7 +104,7 @@ const ListBox: React.FC<ListBoxProps> = ({
     setIsEditing(false);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent): void => {
     if (e.key === "Enter") {
       handleTitleSave();
     }

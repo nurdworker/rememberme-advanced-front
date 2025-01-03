@@ -26,42 +26,56 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import { auth } from "../auth";
 import { staticData } from "../staticData";
 
+//types
+import {
+  ReduxState,
+  Word,
+  List,
+  FetchDataReturn,
+  IncorrectList,
+} from "../types/index";
+import { AxiosResponse } from "axios";
+
 const Words = () => {
-  const list_id = useParams<{ id: string }>().id;
+  const list_id: string | undefined = useParams<{ id: string }>().id;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { editedWordsQueue } = useQueue();
 
   const { fetchWordsData, fetchListsData, showAlert } = useFuncs();
-  const isFetching = useSelector((state: any) => state.mode.isFetching);
+  const isFetching: boolean = useSelector(
+    (state: ReduxState) => state.mode.isFetching
+  );
   const location = useLocation();
 
-  // 단어장 데이터 가져오기
-
-  const words = useSelector((state: any) => state.data.words || []);
-  const lists = useSelector((state: any) => state.data.lists);
-  const [list, setList] = useState<any>(null);
-  const [isCreateWordModalOpen, setIsCreateWordModalOpen] = useState(false);
-  const [isSideBtnsActive, setIsSideBtnsActive] = useState(false);
-  const [isWordShowActive, setIsWordShowActive] = useState(true);
-  const [isMeanShowActive, setIsMeanShowActive] = useState(true);
-  const [isMemoShowActive, setIsMemoShowActive] = useState(false);
+  const words: Word[] = useSelector(
+    (state: ReduxState) => state.data.words || []
+  );
+  const lists: List[] = useSelector((state: ReduxState) => state.data.lists);
+  const [list, setList] = useState<List | null>(null);
+  const [isCreateWordModalOpen, setIsCreateWordModalOpen] =
+    useState<boolean>(false);
+  const [isSideBtnsActive, setIsSideBtnsActive] = useState<boolean>(false);
+  const [isWordShowActive, setIsWordShowActive] = useState<boolean>(true);
+  const [isMeanShowActive, setIsMeanShowActive] = useState<boolean>(true);
+  const [isMemoShowActive, setIsMemoShowActive] = useState<boolean>(false);
 
   const [selectedWordIds, setSelectedWordIds] = useState<string[]>([]);
 
-  const [isEditModeActive, setIsEditModeActive] = useState(false);
+  const [isEditModeActive, setIsEditModeActive] = useState<boolean>(false);
 
   const [isIncorrectList, setIsIncorrectList] = useState<boolean>(false);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const isIncorrectListParam = queryParams.get("isIncorrectList");
+    const isIncorrectListParam: string | null =
+      queryParams.get("isIncorrectList");
     setIsIncorrectList(isIncorrectListParam === "true");
   }, [location.search]);
 
-  const checkListsAndfetchLists = useCallback(async () => {
+  const checkListsAndfetchLists = useCallback(async (): Promise<void> => {
     if (!lists || lists.length === 0) {
-      const fetchingResult = await fetchListsData();
+      const fetchingResult: FetchDataReturn = await fetchListsData();
       if (fetchingResult?.message === "success") {
         console.log("fetching lists is succeed");
         return;
@@ -74,12 +88,12 @@ const Words = () => {
       }
     }
   }, [lists, navigate, fetchListsData]);
-  const checkWordsAndfetchWords = useCallback(async () => {
-    const isListWordsInStore = words.some(
-      (word: any) => word.list_id === list_id
+  const checkWordsAndfetchWords = useCallback(async (): Promise<void> => {
+    const isListWordsInStore: boolean = words.some(
+      (word: Word) => word.list_id === list_id
     );
     if (!isListWordsInStore) {
-      const fetchingResult = await fetchWordsData(list_id);
+      const fetchingResult: FetchDataReturn = await fetchWordsData(list_id);
       if (fetchingResult?.message === "success") {
         console.log("fetching words is succeed");
         return;
@@ -94,7 +108,7 @@ const Words = () => {
   }, [words, list_id, navigate, fetchWordsData]);
 
   useEffect(() => {
-    const asyncHandler = async () => {
+    const asyncHandler = async (): Promise<void> => {
       await checkListsAndfetchLists();
       await checkWordsAndfetchWords();
     };
@@ -103,24 +117,24 @@ const Words = () => {
 
   useEffect(() => {
     if (lists && lists.length > 0) {
-      console.log(lists.length);
-      const foundList = lists.find((list: any) => list?._id === list_id);
-      console.log(foundList);
+      const foundList: List | undefined = lists.find(
+        (list: List) => list?._id === list_id
+      );
       setList(foundList || null);
     }
   }, [lists, list_id]);
 
-  const toggleCreateWordModal = () => {
+  const toggleCreateWordModal = (): void => {
     setIsCreateWordModalOpen(!isCreateWordModalOpen);
   };
 
-  const toggleSideBtns = () => {
-    setIsSideBtnsActive((prev) => !prev);
+  const toggleSideBtns = (): void => {
+    setIsSideBtnsActive((prev: boolean): boolean => !prev);
   };
 
-  const toggleWordShow = () => {
-    setIsWordShowActive((prev) => {
-      const newState = !prev;
+  const toggleWordShow = (): void => {
+    setIsWordShowActive((prev: boolean): boolean => {
+      const newState: boolean = !prev;
       if (!isMeanShowActive && !newState) {
         setIsMeanShowActive(true);
       }
@@ -128,9 +142,9 @@ const Words = () => {
     });
   };
 
-  const toggleMeanShow = () => {
-    setIsMeanShowActive((prev) => {
-      const newState = !prev;
+  const toggleMeanShow = (): void => {
+    setIsMeanShowActive((prev: boolean): boolean => {
+      const newState: boolean = !prev;
       if (!isWordShowActive && !newState) {
         setIsWordShowActive(true);
       }
@@ -138,13 +152,13 @@ const Words = () => {
     });
   };
 
-  const toggleMemoShow = () => {
-    setIsMemoShowActive((prev) => !prev);
+  const toggleMemoShow = (): void => {
+    setIsMemoShowActive((prev: boolean): boolean => !prev);
   };
 
-  const handleWordDoubleClick = (wordId: string) => {
+  const handleWordDoubleClick = (wordId: string): void => {
     console.log("double!");
-    setSelectedWordIds((prevSelectedWordIds) => {
+    setSelectedWordIds((prevSelectedWordIds: string[]): string[] => {
       if (prevSelectedWordIds.includes(wordId)) {
         return prevSelectedWordIds.filter((id) => id !== wordId);
       } else {
@@ -153,12 +167,12 @@ const Words = () => {
     });
   };
 
-  const toggleEditMode = () => {
-    setIsEditModeActive((prev) => !prev);
+  const toggleEditMode = (): void => {
+    setIsEditModeActive((prev: boolean): boolean => !prev);
   };
 
-  const shuffleWords = () => {
-    const copiedArray = [...words];
+  const shuffleWords = (): void => {
+    const copiedArray: Word[] = [...words];
     for (let i = copiedArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [copiedArray[i], copiedArray[j]] = [copiedArray[j], copiedArray[i]];
@@ -166,13 +180,13 @@ const Words = () => {
     dispatch({ type: "SET_DATA_WORDS", value: copiedArray });
   };
 
-  const deleteWords = () => {
+  const deleteWords = (): void => {
     if (!selectedWordIds || selectedWordIds.length === 0) {
       console.log("There are no selected words.");
       return;
     }
 
-    const updatedWords = words.map((word: any) => {
+    const updatedWords: Word[] = words.map((word: Word) => {
       if (selectedWordIds.includes(word._id)) {
         return { ...word, is_deleted: true };
       }
@@ -186,8 +200,10 @@ const Words = () => {
 
     setSelectedWordIds([]);
 
-    selectedWordIds.forEach((id) => {
-      const wordToDelete = words.find((word: any) => word._id === id);
+    selectedWordIds.forEach((id: string): void => {
+      const wordToDelete: Word | undefined = words.find(
+        (word: Word) => word._id === id
+      );
       if (wordToDelete) {
         const updatedWord = { ...wordToDelete, is_deleted: true };
         editedWordsQueue.enqueue(updatedWord);
@@ -197,37 +213,43 @@ const Words = () => {
     });
   };
 
-  const handleCreateIncorrectList = async () => {
-    console.log("go create incorrect list api");
+  const handleCreateIncorrectList = async (): Promise<void> => {
+    console.log("let's create incorrect list and send api");
 
     if (list_id) {
-      const data = {
+      const data: { list_id: string } = {
         list_id,
       };
 
       try {
         dispatch({ type: "SET_LOADING", value: true });
 
-        const response = await auth.api.post(
+        const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/incorrectlist?request=putIncorrectList`,
           data
         );
 
         if (response?.status === 200 || response?.status === 201) {
           showAlert("Incorrect list created successfully!");
-          const newIncorrectList = response.data.answer.incorrectList;
+          const newIncorrectList: IncorrectList =
+            response.data.answer.incorrectList;
           console.log(newIncorrectList);
-          const newIncorrectList_id = newIncorrectList._id;
+          const newIncorrectList_id: string = newIncorrectList._id;
           console.log(newIncorrectList_id);
-          const updatedList = {
-            ...list,
-            linked_incorrect_word_lists: [newIncorrectList_id],
-          };
-          const updatedLists = staticData.updateListInArray(lists, updatedList);
-          dispatch({
-            type: "SET_DATA_LISTS",
-            value: updatedLists,
-          });
+          if (newIncorrectList_id) {
+            const updatedList = {
+              ...list,
+              linked_incorrect_word_lists: [newIncorrectList_id],
+            } as List;
+            const updatedLists: List[] = staticData.updateListInArray(
+              lists,
+              updatedList
+            );
+            dispatch({
+              type: "SET_DATA_LISTS",
+              value: updatedLists,
+            });
+          }
         } else {
           showAlert("Failed to create incorrect list.");
         }
@@ -242,11 +264,11 @@ const Words = () => {
     }
   };
 
-  const handleJoinIncorrectList = () => {
+  const handleJoinIncorrectList = (): void => {
     navigate(`/lists/${list_id}?isIncorrectList=true`);
   };
 
-  const handleJoinList = () => {
+  const handleJoinList = (): void => {
     navigate(`/lists/${list_id}`);
   };
 
@@ -320,10 +342,10 @@ const Words = () => {
           ) : words.length > 0 ? (
             words
               .filter(
-                (word: any) =>
+                (word: Word) =>
                   word.is_deleted === false && word.list_id === list_id
               )
-              .map((word: any) => (
+              .map((word: Word) => (
                 <div
                   key={word._id}
                   className="word-box-select"
@@ -344,8 +366,8 @@ const Words = () => {
                     isMemoShowActive={isMemoShowActive}
                     isSelected={selectedWordIds.includes(word?._id)}
                     isEditModeActive={isEditModeActive}
-                    incorrectList_id={list?.linked_incorrect_word_lists[0]}
-                    list_id={list?._id}
+                    incorrectList_id={list.linked_incorrect_word_lists[0]}
+                    list_id={list!._id}
                   />
                 </div>
               ))
@@ -361,12 +383,12 @@ const Words = () => {
           ) : words.length > 0 ? (
             words
               .filter(
-                (word: any) =>
+                (word: Word) =>
                   word.is_deleted === false &&
                   word.list_id === list_id &&
                   word.incorrect_lists.length > 0
               )
-              .map((word: any) => (
+              .map((word: Word) => (
                 <div
                   key={word?._id}
                   className="word-box-select"
@@ -387,8 +409,8 @@ const Words = () => {
                     isMemoShowActive={isMemoShowActive}
                     isSelected={selectedWordIds.includes(word?._id)}
                     isEditModeActive={isEditModeActive}
-                    incorrectList_id={list?.linked_incorrect_word_lists[0]}
-                    list_id={list?._id}
+                    incorrectList_id={list.linked_incorrect_word_lists[0]}
+                    list_id={list!._id}
                     isIncorrectList={isIncorrectList}
                   />
                 </div>

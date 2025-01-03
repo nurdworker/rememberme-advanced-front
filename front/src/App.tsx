@@ -1,5 +1,5 @@
 // public modules
-import React, { useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { Provider } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -37,6 +37,9 @@ import Auth from "./components/Auth";
 import AlertModal from "./components/small/AlertModal";
 import Loading from "./components/small/Loading";
 
+// public types
+import { UserInfo, ReduxState } from "./types/index";
+
 const AppContent = () => {
   // default
   const location = useLocation();
@@ -44,13 +47,13 @@ const AppContent = () => {
   const isDev = process.env.REACT_APP_ENV === "dev";
 
   //mode state
-  const isSign = useSelector((state: any) => state.mode.isSign);
-  const isLoading = useSelector((state: any) => state.mode.isLoading);
-  const isAlert = useSelector((state: any) => state.mode.isAlert);
-  const alertMessage = useSelector((state: any) => state.alertMessage);
+  const isSign = useSelector((state: ReduxState) => state.mode.isSign);
+  const isLoading = useSelector((state: ReduxState) => state.mode.isLoading);
+  const isAlert = useSelector((state: ReduxState) => state.mode.isAlert);
+  const alertMessage = useSelector((state: ReduxState) => state.alertMessage);
 
   // public data
-  const userInfo = useSelector((state: any) => state.userInfo);
+  const userInfo: UserInfo = useSelector((state: ReduxState) => state.userInfo);
   const { editedListsQueue, editedWordsQueue } = useQueue();
 
   //component state
@@ -119,30 +122,30 @@ const AppContent = () => {
   }, [dispatch]);
 
   // router effect
-  useEffect(() => {
-    const handleRouteChange = async () => {
-      if (location.pathname === "/") {
-        console.log("Root path, skipping save.");
-        return; // 무한렌더링 방지
-      }
+  // useEffect(() => {
+  //   const handleRouteChange = async () => {
+  //     if (location.pathname === "/") {
+  //       console.log("Root path, skipping save.");
+  //       return; // 무한렌더링 방지
+  //     }
 
-      if (!editedListsQueue.isEmpty()) {
-        await saveListsQueueDataAtDb();
-      }
-      if (!editedWordsQueue.isEmpty()) {
-        await saveWordsQueueDataAtDb();
-      }
-      console.log(`Current Path: ${location.pathname}`);
-    };
+  //     if (!editedListsQueue.isEmpty()) {
+  //       await saveListsQueueDataAtDb();
+  //     }
+  //     if (!editedWordsQueue.isEmpty()) {
+  //       await saveWordsQueueDataAtDb();
+  //     }
+  //     console.log(`Current Path: ${location.pathname}`);
+  //   };
 
-    handleRouteChange();
-  }, [
-    location,
-    editedListsQueue,
-    editedWordsQueue,
-    saveListsQueueDataAtDb,
-    saveWordsQueueDataAtDb,
-  ]);
+  //   handleRouteChange();
+  // }, [
+  //   location,
+  //   editedListsQueue,
+  //   editedWordsQueue,
+  //   saveListsQueueDataAtDb,
+  //   saveWordsQueueDataAtDb,
+  // ]);
 
   // user Info effect
   useEffect(() => {
@@ -150,7 +153,7 @@ const AppContent = () => {
     const picture = localStorage.getItem("picture");
 
     if (email && picture) {
-      const userInfo = { email, picture };
+      const userInfo: UserInfo = { email, picture };
       dispatch({ type: "SET_USER_INFO", value: userInfo });
     }
   }, [dispatch]);

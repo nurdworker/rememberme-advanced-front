@@ -21,7 +21,7 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { sendApiToEditWords, sendApiToEditLists } = useFuncs();
 
-  // useMemo로 커스텀 훅에서 반환된 함수들을 메모이제이션
+  // useMemo로 커스텀 훅에서 반환된 함수들 useMemo
   const sendApiToEditWordsMemo = useMemo(
     () => sendApiToEditWords,
     [sendApiToEditWords]
@@ -31,7 +31,7 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
     [sendApiToEditLists]
   );
 
-  // 큐를 관리하는 상태들
+  // queue state
   const [editedListsQueue] = useState(
     new staticData.Queue<any>(
       sendApiToEditListsMemo,
