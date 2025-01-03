@@ -12,18 +12,9 @@ import { GrSubtractCircle } from "react-icons/gr";
 // css
 import "./WordBox.scss";
 
-// type
-interface WordProps {
-  _id: string;
-  word: string;
-  mean: string;
-  memo: string;
-  is_incorrect: boolean;
-  list_id: string;
-  user_id: string;
-  creation_date: string;
-  is_deleted: boolean;
-  incorrect_lists: string[];
+// types
+import { Word, ReduxState } from "../../types/index";
+interface WordProps extends Word {
   isWordShowActive: boolean;
   isMeanShowActive: boolean;
   isMemoShowActive: boolean;
@@ -60,25 +51,25 @@ const WordBox: React.FC<WordProps> = ({
 
   // public data
   const { editedWordsQueue } = useQueue();
-  const words = useSelector((state: any) => state.data.words);
+  const words: Word[] = useSelector((state: ReduxState) => state.data.words);
 
   // component state
-  const [fontSize, setFontSize] = useState(40);
-  const [isEditingWord, setIsEditingWord] = useState(false);
-  const [isEditingMean, setIsEditingMean] = useState(false);
-  const [isEditingMemo, setIsEditingMemo] = useState(false);
-  const [newWord, setNewWord] = useState(word);
-  const [newMean, setNewMean] = useState(mean);
-  const [newMemo, setNewMemo] = useState(memo);
+  const [fontSize, setFontSize] = useState<number>(40);
+  const [isEditingWord, setIsEditingWord] = useState<boolean>(false);
+  const [isEditingMean, setIsEditingMean] = useState<boolean>(false);
+  const [isEditingMemo, setIsEditingMemo] = useState<boolean>(false);
+  const [newWord, setNewWord] = useState<string>(word);
+  const [newMean, setNewMean] = useState<string>(mean);
+  const [newMemo, setNewMemo] = useState<string>(memo);
 
   // js identifier
-  const wordData = words.find((word: any) => word._id === _id);
+  const wordData: Word = words.find((word: Word) => word._id === _id) as Word;
 
   // edit handlers
   const handleSaveWord = () => {
-    if (wordData.word !== newWord) {
-      const updatedWord = { ...wordData, word: newWord };
-      const updatedWordsArray = staticData.updatedWordsArray(
+    if (wordData?.word !== newWord) {
+      const updatedWord = { ...wordData, word: newWord } as Word;
+      const updatedWordsArray: Word[] = staticData.updatedWordsArray(
         words,
         updatedWord
       );
@@ -91,10 +82,10 @@ const WordBox: React.FC<WordProps> = ({
     }
   };
 
-  const handleSaveMean = () => {
-    if (wordData.mean !== newMean) {
-      const updatedMeanWord = { ...wordData, mean: newMean };
-      const updatedWordsArray = staticData.updatedWordsArray(
+  const handleSaveMean = (): void => {
+    if (wordData?.mean !== newMean) {
+      const updatedMeanWord = { ...wordData, mean: newMean } as Word;
+      const updatedWordsArray: Word[] = staticData.updatedWordsArray(
         words,
         updatedMeanWord
       );
@@ -107,10 +98,10 @@ const WordBox: React.FC<WordProps> = ({
     }
   };
 
-  const handleSaveMemo = () => {
+  const handleSaveMemo = (): void => {
     if (wordData.memo !== newMemo) {
-      const updatedMemoWord = { ...wordData, memo: newMemo };
-      const updatedWordsArray = staticData.updatedWordsArray(
+      const updatedMemoWord = { ...wordData, memo: newMemo } as Word;
+      const updatedWordsArray: Word[] = staticData.updatedWordsArray(
         words,
         updatedMemoWord
       );
@@ -123,8 +114,8 @@ const WordBox: React.FC<WordProps> = ({
     }
   };
 
-  const handleAddWordInIncorrectList = () => {
-    const updatedWord = {
+  const handleAddWordInIncorrectList = (): void => {
+    const updatedWord: Word = {
       ...wordData,
       is_incorrect: true,
       incorrect_lists: wordData.incorrect_lists.includes(incorrectList_id)
@@ -132,21 +123,27 @@ const WordBox: React.FC<WordProps> = ({
         : [...wordData.incorrect_lists, incorrectList_id],
     };
 
-    const updatedWordsArray = staticData.updatedWordsArray(words, updatedWord);
+    const updatedWordsArray: Word[] = staticData.updatedWordsArray(
+      words,
+      updatedWord
+    );
     dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
     editedWordsQueue.enqueue(updatedWord);
   };
 
-  const handleSubtractWordInFromcorrectList = () => {
-    const updatedWord = {
+  const handleSubtractWordInFromcorrectList = (): void => {
+    const updatedWord: Word = {
       ...wordData,
       is_incorrect: false,
       incorrect_lists: wordData.incorrect_lists.filter(
-        (listId: any) => listId !== incorrectList_id
+        (listId: string) => listId !== incorrectList_id
       ),
     };
 
-    const updatedWordsArray = staticData.updatedWordsArray(words, updatedWord);
+    const updatedWordsArray: Word[] = staticData.updatedWordsArray(
+      words,
+      updatedWord
+    );
     dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
     editedWordsQueue.enqueue(updatedWord);
   };

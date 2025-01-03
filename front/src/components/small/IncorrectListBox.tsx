@@ -6,18 +6,19 @@ import "./IncorrectListBox.scss";
 // custom
 import { staticData } from "../../staticData";
 
-// type
-interface ListBoxProps {
-  name: string;
-  creation_date: string;
-  language: string;
-  linked_incorrect_word_lists: string[];
-  _id: string;
-  user_id: string;
-  is_deleted: boolean;
-}
+// types
+import { List } from "../../types/index";
+// interface ListBoxProps {
+//   name: string;
+//   creation_date: string;
+//   language: string;
+//   linked_incorrect_word_lists: string[];
+//   _id: string;
+//   user_id: string;
+//   is_deleted: boolean;
+// }
 
-const IncorrectListBox: React.FC<ListBoxProps> = ({
+const IncorrectListBox: React.FC<List> = ({
   name,
   creation_date,
   language,
@@ -27,7 +28,7 @@ const IncorrectListBox: React.FC<ListBoxProps> = ({
   is_deleted,
 }) => {
   //component state
-  const flagImage =
+  const flagImage: string =
     language === "en"
       ? staticData.flag_imgs.en
       : language === "jp"

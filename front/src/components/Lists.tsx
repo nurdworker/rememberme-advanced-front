@@ -2,8 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DragStart,
+  DropResult,
+} from "react-beautiful-dnd";
 // css
 import "./Lists.scss";
 
@@ -20,17 +25,8 @@ import ListBox from "./small/ListBox";
 import { FaPlus } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";
 
-// type
-interface List {
-  _id: string;
-  name: string;
-  creation_date: string;
-  language: string;
-  linked_incorrect_word_lists: any[];
-  is_bookmark: boolean;
-  user_id: string;
-  is_deleted: boolean;
-}
+// types
+import { FetchDataReturn, List, ReduxState } from "../types/index";
 
 const Lists = () => {
   //default
@@ -38,17 +34,17 @@ const Lists = () => {
   const dispatch = useDispatch();
 
   //mode state
-  const isSign = useSelector((state: any) => state?.mode.isSign);
-  const isFetching = useSelector((state: any) => state.mode.isFetching);
-  const isMobile = useSelector((state: any) => state.mode.isMobile);
+  const isSign = useSelector((state: ReduxState) => state?.mode.isSign);
+  const isFetching = useSelector((state: ReduxState) => state.mode.isFetching);
+  const isMobile = useSelector((state: ReduxState) => state.mode.isMobile);
 
   //public data
-  const lists = useSelector((state: any) => state.data.lists);
+  const lists = useSelector((state: ReduxState) => state.data.lists);
   const { editedListsQueue } = useQueue();
 
   //component state
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedListIds, setselectedListIds] = useState<string[]>([]);
+  const [selectedListIds, setSelectedListIds] = useState<string[]>([]);
 
   //custom hook funcs
   const { fetchListsData } = useFuncs();
@@ -57,27 +53,22 @@ const Lists = () => {
   let clickTimeout: NodeJS.Timeout | null = null;
 
   useEffect(() => {
-    const asyncHandler = async () => {
+    const asyncHandler = async (): Promise<void> => {
       if (!lists || lists.length === 0) {
         // 어레이가 빈값일경우
-        const fetchingResult = await fetchListsData();
-        console.log(1);
+        const fetchingResult: FetchDataReturn = await fetchListsData();
         if (fetchingResult?.message === "success") {
           // 2. 새로운 사용자일경우
           console.log("fetching is succeed");
-          console.log(2);
 
           return;
         } else if (fetchingResult?.message === "processing") {
           // 2. 이미 fetching중일경우
-          console.log(3);
 
           console.log("fetching is processing");
           return;
         } else {
           // 1. fetch가 안되었을경우
-          console.log(4);
-
           console.log("fetching is on error");
           navigate("/");
         }
@@ -104,7 +95,7 @@ const Lists = () => {
       clearTimeout(clickTimeout);
     }
 
-    setselectedListIds((prev) => {
+    setSelectedListIds((prev: string[]): string[] => {
       if (prev.includes(list._id)) {
         return prev.filter((id) => id !== list._id);
       }
@@ -121,13 +112,13 @@ const Lists = () => {
   };
 
   // buttons funcs
-  const deleteLists = () => {
+  const deleteLists = (): List | undefined => {
     if (!selectedListIds || selectedListIds.length === 0) {
       console.log("there is not selected");
       return;
     }
 
-    const updatedLists = lists.map((list: List) => {
+    const updatedLists: List[] = lists.map((list: List) => {
       if (selectedListIds.includes(list._id)) {
         return { ...list, is_deleted: true };
       }
@@ -139,12 +130,14 @@ const Lists = () => {
       value: updatedLists,
     });
 
-    setselectedListIds([]);
+    setSelectedListIds([]);
 
     selectedListIds.forEach((id) => {
-      const listToDelete = lists.find((list: List) => list._id === id);
+      const listToDelete: List | undefined = lists.find(
+        (list: List) => list._id === id
+      );
       if (listToDelete) {
-        const updatedList = { ...listToDelete, is_deleted: true };
+        const updatedList: List = { ...listToDelete, is_deleted: true };
         editedListsQueue.enqueue(updatedList);
       } else {
         console.log(`List with id ${id} not found`);
@@ -152,20 +145,20 @@ const Lists = () => {
     });
   };
 
-  const toggleCreateModal = () => {
+  const toggleCreateModal = (): void => {
     setIsModalOpen(!isModalOpen);
   };
 
   // drag funcs
-  const handleDragStart = (start: any) => {
+  const handleDragStart = (start: DragStart) => {
     // 만약 드래그중인 데이터가 필요할경우 사용하세여
-    const draggedList = lists.find(
+    const draggedList: List | undefined = lists.find(
       (list: List) => list._id === start.draggableId
     );
     console.log(draggedList);
   };
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     console.log("destination:", destination);
 
@@ -173,7 +166,9 @@ const Lists = () => {
 
     if (destination.index === source.index) return;
 
-    const draggedItem = lists.find((list: List) => list._id === draggableId);
+    const draggedItem: List | undefined = lists.find(
+      (list: List) => list._id === draggableId
+    );
 
     if (!draggedItem) {
       console.error("List not found for the given draggableId");
@@ -182,13 +177,15 @@ const Lists = () => {
 
     if (destination.droppableId === "wordLists") {
       // is_deleted가 false인 항목만 필터링
-      const activeLists = lists.filter((list: List) => !list.is_deleted);
+      const activeLists: List[] = lists.filter(
+        (list: List) => !list.is_deleted
+      );
 
       // activeLists에서만 재정렬
-      const reorderedLists = [...activeLists];
+      const reorderedLists: List[] = [...activeLists];
 
       // 삭제된 항목을 빼고 순서 변경
-      const [removedItem] = reorderedLists.splice(source.index, 1); // 삭제
+      const [removedItem]: List[] = reorderedLists.splice(source.index, 1); // 삭제
       reorderedLists.splice(destination.index, 0, removedItem); // 삽입
 
       console.log(
@@ -197,7 +194,9 @@ const Lists = () => {
       );
 
       // 로컬스토리지에 업데이트된 순서 저장
-      const reorderedIds = reorderedLists.map((list: List) => list._id);
+      const reorderedIds: string[] = reorderedLists.map(
+        (list: List) => list._id
+      );
 
       // 로컬스토리지에 순서 저장
       localStorage.setItem("reorderedLists", JSON.stringify(reorderedIds));

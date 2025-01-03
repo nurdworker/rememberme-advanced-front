@@ -42,11 +42,13 @@ const Loading: React.FC<LoadingProps> = ({ isLoading }) => {
   return (
     <div
       id="spinner"
-      className="loading-spinner fixed inset-0 flex justify-center items-center bg-black bg-opacity-75 w-screen h-screen z-[100] transition-opacity duration-300"
-      style={{ opacity, display }}
+      className="loading-spinner fixed inset-0 flex justify-center items-center w-screen h-screen z-[100] transition-opacity duration-300"
+      style={{ opacity, display, pointerEvents: "none" }}
     >
       <div className="w-16 h-16 border-4 border-t-4 border-blue-500 rounded-full animate-spin border-t-transparent"></div>
-      <p className="absolute text-lg text-white">Loading...</p>
+      <p className="absolute text-lg text-black bg-white bg-opacity-75 px-2 py-1 rounded">
+        Loading...
+      </p>
     </div>
   );
 };

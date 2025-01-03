@@ -17,14 +17,12 @@ import ListBox from "./small/ListBox";
 
 // icons
 import { MdFavorite } from "react-icons/md";
+import { List, ReduxState } from "../types";
 
 // type
-type GoogleLoginButtonProps = {
-  onClick: () => void;
-};
 
 // simple components
-const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ onClick }) => (
+const GoogleLoginButton = ({ onClick }: any) => (
   <button className="google-login-btn" type="button" onClick={onClick}>
     <img
       src={staticData.google_img}
@@ -38,20 +36,20 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ onClick }) => (
 const Home = () => {
   // default
   const { editedListsQueue } = useQueue();
-  const queueChangedRef = useRef(false);
+  const queueChangedRef = useRef<boolean>(false);
   const { fetchListsData, showAlert } = useFuncs();
   const dispatch = useDispatch();
 
   //mode state
-  const isSign = useSelector((state: any) => state?.mode.isSign);
-  const isFetching = useSelector((state: any) => state?.mode.isFetching);
-  const isMobile = useSelector((state: any) => state.mode.isMobile);
+  const isSign = useSelector((state: ReduxState) => state?.mode.isSign);
+  const isFetching = useSelector((state: ReduxState) => state?.mode.isFetching);
+  const isMobile = useSelector((state: ReduxState) => state.mode.isMobile);
 
   // public data
-  const lists = useSelector((state: any) => state?.data.lists);
+  const lists = useSelector((state: ReduxState) => state?.data.lists);
 
   // funcs
-  const saveListsQueueDataAtDb = useCallback(async () => {
+  const saveListsQueueDataAtDb = useCallback(async (): Promise<void> => {
     if (editedListsQueue.isEmpty()) {
       console.log("Queue is empty, nothing to save.");
       return;
@@ -64,7 +62,7 @@ const Home = () => {
     }
   }, [editedListsQueue]);
 
-  const processQueueThenFetch = useCallback(async () => {
+  const processQueueThenFetch = useCallback(async (): Promise<void> => {
     await saveListsQueueDataAtDb();
     await fetchListsData();
   }, [saveListsQueueDataAtDb, fetchListsData]);
@@ -80,7 +78,7 @@ const Home = () => {
     processQueueThenFetch();
   }, [processQueueThenFetch]);
 
-  const handleSign = async () => {
+  const handleSign = async (): Promise<void> => {
     try {
       dispatch({ type: "SET_LOADING", value: true });
       await auth.joinGoogleOauthUrl();
@@ -92,12 +90,18 @@ const Home = () => {
       dispatch({ type: "SET_LOADING", value: false });
     }
   };
+  const testAlert = (): void => {
+    showAlert("안녕dddddddddddddddd?");
+    console.log("gogo");
+  };
 
   return (
     <div className={`container_home ${isMobile ? "mobile" : "desktop"}`}>
       {!isSign && <GoogleLoginButton onClick={handleSign} />}
       {!isFetching && isSign && (
         <div className="contents-home">
+          <div onClick={testAlert}>알러트테스트!!</div>
+
           <div className="title-box">
             <MdFavorite
               className="bounce-top"
@@ -109,8 +113,8 @@ const Home = () => {
           <div className="lists">
             {lists && lists.length > 0 ? (
               lists
-                .filter((list: any) => list.is_bookmark && !list.is_deleted)
-                .map((list: any) => <ListBox key={list._id} {...list} />)
+                .filter((list: List) => list.is_bookmark && !list.is_deleted)
+                .map((list: List) => <ListBox key={list._id} {...list} />)
             ) : (
               <p>No bookmarked word lists</p>
             )}
@@ -129,9 +133,9 @@ const Home = () => {
             {lists && lists.length > 0 ? (
               lists
                 .filter(
-                  (list: any) => list.language === "en" && !list.is_deleted
+                  (list: List) => list.language === "en" && !list.is_deleted
                 )
-                .map((list: any) => <ListBox key={list._id} {...list} />)
+                .map((list: List) => <ListBox key={list._id} {...list} />)
             ) : (
               <p>No English word lists.</p>
             )}
@@ -150,9 +154,9 @@ const Home = () => {
             {lists && lists.length > 0 ? (
               lists
                 .filter(
-                  (list: any) => list.language === "jp" && !list.is_deleted
+                  (list: List) => list.language === "jp" && !list.is_deleted
                 )
-                .map((list: any) => <ListBox key={list._id} {...list} />)
+                .map((list: List) => <ListBox key={list._id} {...list} />)
             ) : (
               <p>No Japanese word lists</p>
             )}

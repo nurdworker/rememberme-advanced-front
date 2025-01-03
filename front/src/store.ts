@@ -1,8 +1,20 @@
 // store.ts
 import { configureStore } from "@reduxjs/toolkit";
+import { ReduxState, List, Word, UserInfo } from "./types/index";
+//type
+type Action =
+  | { type: "SET_DATA_LISTS"; value: List[] }
+  | { type: "SET_DATA_WORDS"; value: Word[] }
+  | { type: "SET_USER_INFO"; value: UserInfo }
+  | { type: "SET_SIGN"; value: boolean }
+  | { type: "SET_LOADING"; value: boolean }
+  | { type: "SET_FETCHING"; value: boolean }
+  | { type: "SET_ALERT"; value: boolean }
+  | { type: "SET_MOBILE"; value: boolean }
+  | { type: "SET_ALERT_MESSAGE"; message: string | null };
 
 // initial data
-const initialState = {
+const initialState: ReduxState = {
   mode: {
     isSign: false,
     isLoading: false,
@@ -16,7 +28,7 @@ const initialState = {
 };
 
 // reducer
-const appReducer = (state = initialState, action: any) => {
+const appReducer = (state = initialState, action: Action) => {
   switch (action.type) {
     // set data
 

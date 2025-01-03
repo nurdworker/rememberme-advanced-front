@@ -1,36 +1,20 @@
 // public modules
-import axios, { AxiosResponse } from "axios";
+import axios, {
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+  AxiosError,
+} from "axios";
 import CryptoJS from "crypto-js";
+
+// types
+import { UserInfo, ClientData, SignResponse, AuthData } from "./types/index";
 
 // static data
 const api: string | undefined = process.env.REACT_APP_API_GATEWAY_ENDPOINT;
 
-// type
-interface ClientData {
-  clientId: string;
-  redirectUri: string;
-}
-
-interface Tokens {
-  access_token: string;
-  refresh_token: string;
-}
-
-interface UserInfo {
-  email: string;
-  name: string;
-  picture: string;
-}
-
-interface SignResponse {
-  authResponse: string;
-  userInfo: UserInfo;
-  tokens: Tokens;
-}
-
 // sign flow funcs
 export const auth = {
-  // Code verifier 생성
+  // Code verifier
   createCodeVerifier: (): string => {
     const randomString: string = Math.random().toString(36).substring(2, 15);
     return randomString;
@@ -39,22 +23,20 @@ export const auth = {
   createCodeChallenge: (codeVerifier: string): string => {
     const hash = CryptoJS.SHA256(codeVerifier);
 
-    const base64String = hash
+    const base64String: string = hash
       .toString(CryptoJS.enc.Base64)
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
-    console.log(base64String);
     return base64String;
   },
 
-  // Client ID와 Redirect URI를 백엔드에서 가져오기
+  // get client Id and redirect uri from backend
   getClientIdAndRedirectUri: async (): Promise<ClientData> => {
     try {
-      const response = await axios.get<{
-        clientId: string;
-        redirectUri: string;
-      }>(`${api}/user?request=getClientIdAndRedirectUri`);
+      const response = await axios.get<ClientData>(
+        `${api}/user?request=getClientIdAndRedirectUri`
+      );
       return {
         clientId: response.data.clientId,
         redirectUri: response.data.redirectUri,
@@ -65,7 +47,7 @@ export const auth = {
     }
   },
 
-  // Google OAuth URL 생성 및 리디렉션
+  // create Google OAuth URL then redirect
   joinGoogleOauthUrl: async (): Promise<void> => {
     try {
       const codeVerifier: string = auth.createCodeVerifier();
@@ -98,9 +80,9 @@ export const auth = {
     }
   },
 
-  // 인증 후, 토큰 및 사용자 정보 저장
+  // after authentication, save unsr Info and tokens
   sign: async (oauthCode: string): Promise<UserInfo | undefined> => {
-    const codeVerifier = localStorage.getItem("code_verifier");
+    const codeVerifier: string | null = localStorage.getItem("code_verifier");
 
     if (!codeVerifier) {
       throw new Error("Code verifier not found in localStorage");
@@ -117,7 +99,7 @@ export const auth = {
         }
       );
 
-      const { userInfo, tokens } = response.data;
+      const { userInfo, tokens } = response.data as SignResponse;
 
       if (userInfo && tokens) {
         localStorage.setItem("access_token", tokens.access_token);
@@ -149,15 +131,17 @@ export const auth = {
 
 // Request interceptor
 auth.api.interceptors.request.use(
-  (config) => {
-    const authData = {
+  (config: InternalAxiosRequestConfig) => {
+    const authData: AuthData = {
       accessToken: localStorage.getItem("access_token"),
       email: localStorage.getItem("email"),
       refreshToken: localStorage.getItem("refresh_token"),
     };
 
-    const hasMissingData = Object.values(authData).some((value) => !value);
-    const hasAnyData = Object.values(authData).some((value) => value);
+    const hasMissingData: boolean = Object.values(authData).some(
+      (value) => !value
+    );
+    const hasAnyData: boolean = Object.values(authData).some((value) => value);
 
     if (hasMissingData && hasAnyData) {
       localStorage.clear();
@@ -184,7 +168,7 @@ auth.api.interceptors.request.use(
 
     return config;
   },
-  (error) => {
+  (error: AxiosError) => {
     console.log("there is error on auth request interceptor");
     return Promise.reject(error);
   }
@@ -192,11 +176,12 @@ auth.api.interceptors.request.use(
 
 // Response interceptor
 auth.api.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse) => {
     if (response.data.authResponse === "success authorization") {
       return response;
     } else if (response.data.authResponse?.message === "here is new tokens") {
-      const access_token = response.data.authResponse.tokens.access_token;
+      const access_token: string =
+        response.data.authResponse.tokens.access_token;
       localStorage.setItem("access_token", access_token);
       return response;
     } else {
@@ -204,14 +189,14 @@ auth.api.interceptors.response.use(
     }
   },
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest: InternalAxiosRequestConfig = error.config;
 
     if (
       error.response?.status === 419 &&
       error.response?.data.authResponse === "expired access token"
     ) {
       console.error("access is expired. retry request with refresh token");
-      const refreshToken = localStorage.getItem("refresh_token");
+      const refreshToken: string | null = localStorage.getItem("refresh_token");
 
       if (!refreshToken) {
         console.error("there is not refresh token in local storage!");
@@ -223,8 +208,7 @@ auth.api.interceptors.response.use(
         originalRequest.headers["Refresh-Token"] = `Bearer ${refreshToken}`;
         originalRequest.headers["Content-Type"] = "application/json";
 
-        const response = await auth.api(originalRequest);
-        console.log(response?.data);
+        const response: AxiosResponse = await auth.api(originalRequest);
         return response;
       } catch (refreshError) {
         alert("Error refreshing token:" + JSON.stringify(refreshError));

@@ -1,37 +1,34 @@
 // public modules
 import { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 // custom
 import { auth } from "./auth";
 import { staticData } from "./staticData";
 
-// type
-interface List {
-  _id: string;
-  name: string;
-  creation_date: string;
-  language: string;
-  linked_incorrect_word_lists: any[];
-  is_bookmark: boolean;
-  user_id: string;
-  is_deleted: boolean;
-}
+// types
+import {
+  FilteredWord,
+  FilteredList,
+  Word,
+  List,
+  ReduxState,
+  UserInfo,
+  FetchDataReturn,
+} from "./types/index";
 
 export const useFuncs = () => {
   // default
   const dispatch = useDispatch();
-  const existingWords = useSelector((state: any) => state.data.words);
+  const existingWords = useSelector((state: ReduxState) => state.data.words);
 
-  const isFetchingWordsProcessing = useRef(false);
-  const isFetchingListsProcessing = useRef(false);
+  const isFetchingWordsProcessing = useRef<boolean>(false);
+  const isFetchingListsProcessing = useRef<boolean>(false);
 
   // shared funcs
   const showAlert = (message: string): void => {
-    console.log("Dispatching SET_ALERT");
     dispatch({ type: "SET_ALERT", value: true });
-    console.log("Dispatching SET_ALERT_MESSAGE");
     dispatch({ type: "SET_ALERT_MESSAGE", message });
     setTimeout(() => {
       console.log("Hiding alert");
@@ -40,7 +37,7 @@ export const useFuncs = () => {
   };
 
   return {
-    sendApiToEditWords: async (wordsArr: Array<object>): Promise<any> => {
+    sendApiToEditWords: async (wordsArr: Word[]): Promise<any> => {
       try {
         if (wordsArr.length === 0) {
           return Promise.resolve("No words to update.");
@@ -48,14 +45,14 @@ export const useFuncs = () => {
 
         dispatch({ type: "SET_LOADING", value: true });
 
-        const filteredWordsArr = wordsArr.map((word: any) => {
+        const filteredWordsArr: FilteredWord[] = wordsArr.map((word: Word) => {
           const { user_id, creation_date, ...filteredWord } = word;
           return filteredWord;
         });
 
         console.log("Filtered Words (압축된 데이터):", filteredWordsArr);
 
-        const response = await auth.api.post(
+        const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/words?request=editWords`,
           { words: filteredWordsArr }
         );
@@ -74,7 +71,7 @@ export const useFuncs = () => {
         dispatch({ type: "SET_LOADING", value: false });
       }
     },
-    sendApiToEditLists: async (listsArr: Array<object>): Promise<any> => {
+    sendApiToEditLists: async (listsArr: List[]): Promise<any> => {
       try {
         if (listsArr.length === 0) {
           return Promise.resolve("No lists to update.");
@@ -82,14 +79,14 @@ export const useFuncs = () => {
 
         dispatch({ type: "SET_LOADING", value: true });
 
-        const filteredListsArr = listsArr.map((list: any) => {
+        const filteredListsArr: FilteredList[] = listsArr.map((list: List) => {
           const { creation_date, language, user_id, ...filteredList } = list;
           return filteredList;
         });
 
         console.log("Filtered Lists (압축된 데이터):", filteredListsArr);
 
-        const response = await auth.api.post(
+        const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/lists?request=editLists`,
           { lists: filteredListsArr }
         );
@@ -106,7 +103,7 @@ export const useFuncs = () => {
         dispatch({ type: "SET_LOADING", value: false });
       }
     },
-    changeUserInfo: (userInfo: any) => {
+    changeUserInfo: (userInfo: UserInfo): void => {
       console.log("change user info");
       dispatch({ type: "SET_USER", value: userInfo });
     },
@@ -118,7 +115,7 @@ export const useFuncs = () => {
     },
 
     fetchWordsData: useCallback(
-      async (list_id: string | undefined) => {
+      async (list_id: string | undefined): Promise<FetchDataReturn> => {
         if (isFetchingWordsProcessing.current) {
           console.log("fetching words is already running. return.");
           return { message: "processing" };
@@ -138,7 +135,7 @@ export const useFuncs = () => {
         try {
           console.log("Fetching words data for list: ", list_id);
 
-          const response = await auth.api.post(
+          const response: AxiosResponse = await auth.api.post(
             `${staticData.endpoint}/words?request=getWords`,
             { list_id }
           );
@@ -146,18 +143,18 @@ export const useFuncs = () => {
           console.log("Words fetched successfully:", response?.data);
 
           if (response?.data.answer.words) {
-            const wordsFromApi = response.data.answer.words;
+            const wordsFromApi: Word[] = response.data.answer.words;
             if (!wordsFromApi || wordsFromApi.length === 0) {
               console.log("No words fetched.");
               return { message: "success" };
             }
 
-            const newWords = wordsFromApi.filter(
+            const newWords: Word[] = wordsFromApi.filter(
               (newWord: any) =>
                 !existingWords.some((word: any) => word._id === newWord._id)
             );
 
-            const updatedWords = [...existingWords, ...newWords];
+            const updatedWords: Word[] = [...existingWords, ...newWords];
             if (newWords.length > 0) {
               dispatch({
                 type: "SET_DATA_WORDS",
@@ -191,7 +188,7 @@ export const useFuncs = () => {
       [dispatch, existingWords]
     ),
 
-    fetchListsData: useCallback(async () => {
+    fetchListsData: useCallback(async (): Promise<FetchDataReturn> => {
       if (isFetchingListsProcessing.current) {
         console.log("fetching lists is already running. return.");
         return { message: "processing" };
@@ -209,43 +206,43 @@ export const useFuncs = () => {
       try {
         console.log("Fetching lists data...");
 
-        const response = await auth.api.get(
+        const response: AxiosResponse = await auth.api.get(
           `${staticData.endpoint}/lists?request=getLists`
         );
 
         if (response?.data.answer.lists) {
-          const fetchedLists = response.data.answer.lists;
+          const fetchedLists: List[] = response.data.answer.lists;
 
           if (!fetchedLists || fetchedLists.length === 0) {
             console.log("No lists fetched. Skipping state update.");
             return { message: "success" };
           }
 
-          const savedOrder = JSON.parse(
+          const savedOrder: string[] = JSON.parse(
             localStorage.getItem("reorderedLists") || "[]"
           );
 
-          const reorderedLists = savedOrder
+          const reorderedLists: List[] = savedOrder
             .map((id: string) =>
               fetchedLists.find((list: List) => list._id === id)
             )
             .filter((list: List | undefined) => list !== undefined) as List[];
 
-          const newLists = fetchedLists.filter(
+          const newLists: List[] = fetchedLists.filter(
             (list: List) => !savedOrder.includes(list._id)
           );
 
-          const finalLists = [...reorderedLists, ...newLists];
+          const finalLists: List[] = [...reorderedLists, ...newLists];
 
           dispatch({
             type: "SET_DATA_LISTS",
             value: finalLists,
           });
 
-          const finalIds = finalLists.map((list) => list._id);
+          const finalIds: string[] = finalLists.map((list) => list._id);
           localStorage.setItem("reorderedLists", JSON.stringify(finalIds));
-          return { message: "success" };
         }
+        return { message: "success" };
       } catch (error) {
         const axiosError = error as AxiosError;
         alert(

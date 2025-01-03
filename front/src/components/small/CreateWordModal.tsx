@@ -10,7 +10,9 @@ import { auth } from "../../auth";
 import { staticData } from "../../staticData";
 import { useFuncs } from "../../funcs";
 
-// type
+// types
+import { Word, ReduxState } from "../../types";
+import { AxiosResponse } from "axios";
 interface CreateWordModalProps {
   isOpen: boolean;
   closeModal: () => void;
@@ -29,7 +31,7 @@ const CreateWordModal: React.FC<CreateWordModalProps> = ({
   const { showAlert } = useFuncs();
 
   // public data
-  const words = useSelector((state: any) => state?.data.words);
+  const words: Word[] = useSelector((state: ReduxState) => state?.data.words);
 
   // component state
   const [word, setWord] = useState<string>("");
@@ -45,24 +47,23 @@ const CreateWordModal: React.FC<CreateWordModalProps> = ({
 
   // Handlers
   const handleAddWord = async () => {
-    console.log("go create modal api");
     if (word.trim() && meaning.trim()) {
       const data = {
         word: word,
         meaning: meaning,
-        list_id, // list_id 사용
+        list_id,
       };
       try {
         dispatch({ type: "SET_LOADING", value: true });
 
-        const response = await auth.api.post(
+        const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/word?request=putWord`,
           data
         );
 
         if (response?.status === 200 || response?.status === 201) {
-          const newWord = response.data.answer.word;
-          const updatedWords = [...words, newWord];
+          const newWord: Word = response.data.answer.word;
+          const updatedWords: Word[] = [...words, newWord];
 
           dispatch({
             type: "SET_DATA_WORDS",

@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 // custom
 import { auth } from "../auth";
 
+//types
+import { UserInfo } from "../types/index";
+
 const Auth: React.FC = () => {
   //default
   const dispatch = useDispatch();
@@ -17,10 +20,10 @@ const Auth: React.FC = () => {
       try {
         dispatch({ type: "SET_LOADING", value: true });
         const params = new URLSearchParams(window.location.search);
-        const code = params.get("code");
+        const code: string | null = params.get("code");
 
         if (code) {
-          const userInfo = await auth.sign(code);
+          const userInfo: UserInfo | undefined = await auth.sign(code);
           dispatch({ type: "SET_USER_INFO", value: userInfo });
           navigate("/");
         } else {

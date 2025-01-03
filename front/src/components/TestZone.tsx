@@ -5,6 +5,7 @@ import { AxiosError } from "axios";
 // custom
 import { auth } from "../auth";
 import { staticData } from "../staticData";
+import {} from "../types";
 
 // type
 interface TestButtonProps {
