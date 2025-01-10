@@ -19,6 +19,7 @@ import "./App.scss";
 // custom
 import { useQueue } from "./QueueContext";
 import { QueueProvider } from "./QueueContext";
+import { useFuncs } from "./funcs";
 
 // icons
 import { IoIosLogOut, IoIosListBox } from "react-icons/io";
@@ -45,12 +46,15 @@ const AppContent = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const isDev = process.env.REACT_APP_ENV === "dev";
+  const { fetchListsData } = useFuncs();
 
   //mode state
   const isSign = useSelector((state: ReduxState) => state.mode.isSign);
   const isLoading = useSelector((state: ReduxState) => state.mode.isLoading);
   const isAlert = useSelector((state: ReduxState) => state.mode.isAlert);
   const alertMessage = useSelector((state: ReduxState) => state.alertMessage);
+  const testWords = useSelector((state: ReduxState) => state.data.words);
+  const testLists = useSelector((state: ReduxState) => state.data.lists);
 
   // public data
   const userInfo: UserInfo = useSelector((state: ReduxState) => state.userInfo);
@@ -61,8 +65,6 @@ const AppContent = () => {
   // funcs
   const handleSignOut = (): void => {
     localStorage.clear();
-    dispatch({ type: "SET_USER_INFO", value: null });
-    dispatch({ type: "SET_DATA", value: {} });
     window.location.reload();
   };
 
@@ -70,7 +72,6 @@ const AppContent = () => {
     if (editedListsQueue.isEmpty()) {
       return;
     }
-
     await editedListsQueue.forceTrigger();
   }, [editedListsQueue]);
 
@@ -78,7 +79,6 @@ const AppContent = () => {
     if (editedWordsQueue.isEmpty()) {
       return;
     }
-
     await editedWordsQueue.forceTrigger();
   }, [editedWordsQueue]);
 
@@ -121,31 +121,15 @@ const AppContent = () => {
     };
   }, [dispatch]);
 
-  // router effect
-  // useEffect(() => {
-  //   const handleRouteChange = async () => {
-  //     if (location.pathname === "/") {
-  //       console.log("Root path, skipping save.");
-  //       return; // 무한렌더링 방지
-  //     }
+  //---------------------
+  const processQueueThenFetch = useCallback(async (): Promise<void> => {
+    await saveListsQueueDataAtDb();
+    await fetchListsData();
+  }, [saveListsQueueDataAtDb, fetchListsData]);
 
-  //     if (!editedListsQueue.isEmpty()) {
-  //       await saveListsQueueDataAtDb();
-  //     }
-  //     if (!editedWordsQueue.isEmpty()) {
-  //       await saveWordsQueueDataAtDb();
-  //     }
-  //     console.log(`Current Path: ${location.pathname}`);
-  //   };
-
-  //   handleRouteChange();
-  // }, [
-  //   location,
-  //   editedListsQueue,
-  //   editedWordsQueue,
-  //   saveListsQueueDataAtDb,
-  //   saveWordsQueueDataAtDb,
-  // ]);
+  useEffect(() => {
+    processQueueThenFetch();
+  }, [processQueueThenFetch]);
 
   // user Info effect
   useEffect(() => {
@@ -246,6 +230,10 @@ const AppContent = () => {
         </nav>
 
         <div className="router_screen">
+          <p>{JSON.stringify(testWords)}</p>
+          <p>끊어!</p>
+          <p>{JSON.stringify(testLists)}</p>
+
           <ErrorBoundary>
             <Routes>
               <Route path="/" element={<Home />} />

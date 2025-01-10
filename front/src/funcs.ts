@@ -215,6 +215,10 @@ export const useFuncs = () => {
 
           if (!fetchedLists || fetchedLists.length === 0) {
             console.log("No lists fetched. Skipping state update.");
+            dispatch({
+              type: "SET_FETCHED_LISTS_DATA",
+              value: true,
+            });
             return { message: "success" };
           }
 

@@ -25,9 +25,13 @@ const Auth: React.FC = () => {
         if (code) {
           const userInfo: UserInfo | undefined = await auth.sign(code);
           dispatch({ type: "SET_USER_INFO", value: userInfo });
-          navigate("/");
+          // navigate("/");
+          // window.location.reload();
+          window.location.href = "/";
         } else {
-          navigate("/");
+          // navigate("/");
+          // window.location.reload();
+          window.location.href = "/";
         }
         dispatch({ type: "SET_LOADING", value: false });
       } catch (error: any) {
