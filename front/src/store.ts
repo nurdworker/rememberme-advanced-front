@@ -9,6 +9,7 @@ type Action =
   | { type: "SET_SIGN"; value: boolean }
   | { type: "SET_LOADING"; value: boolean }
   | { type: "SET_FETCHING"; value: boolean }
+  | { type: "SET_FETCHED_LISTS_DATA"; value: boolean }
   | { type: "SET_ALERT"; value: boolean }
   | { type: "SET_MOBILE"; value: boolean }
   | { type: "SET_ALERT_MESSAGE"; message: string | null };
@@ -21,6 +22,7 @@ const initialState: ReduxState = {
     isAlert: false,
     isFetching: false,
     isMobile: false,
+    isFetchedListsData: false,
   },
   alertMessage: null,
   userInfo: null,
@@ -70,6 +72,14 @@ const appReducer = (state = initialState, action: Action) => {
         mode: {
           ...state.mode,
           isFetching: action.value,
+        },
+      };
+    case "SET_FETCHED_LISTS_DATA":
+      return {
+        ...state,
+        mode: {
+          ...state.mode,
+          isFetedListsData: action.value,
         },
       };
     case "SET_ALERT":

@@ -42,6 +42,7 @@ export interface ModeState {
   isAlert: boolean;
   isFetching: boolean;
   isMobile: boolean;
+  isFetchedListsData: boolean;
 }
 
 export interface DataState {

@@ -66,7 +66,6 @@ const Home = () => {
     await saveListsQueueDataAtDb();
     await fetchListsData();
   }, [saveListsQueueDataAtDb, fetchListsData]);
-
   // useEffects
   useEffect(() => {
     if (!editedListsQueue.isEmpty()) {
