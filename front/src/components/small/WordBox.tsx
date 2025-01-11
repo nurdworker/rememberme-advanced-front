@@ -187,18 +187,16 @@ const WordBox: React.FC<WordProps> = ({
   const handlePlayAudio = (word: string, language: string = "en"): void => {
     const utterance = new SpeechSynthesisUtterance(word);
 
-    // 언어에 따라 음성 언어 설정
     if (language === "en") {
-      utterance.lang = "en-US"; // 영어
+      utterance.lang = "en-US";
     } else if (language === "jp") {
-      utterance.lang = "ja-JP"; // 일본어
+      utterance.lang = "ja-JP";
     } else if (language === "indo") {
-      utterance.lang = "id-ID"; // 인도네시아어
+      utterance.lang = "id-ID";
     } else {
-      utterance.lang = "en-US"; // 기본값은 영어로 설정
+      utterance.lang = "en-US";
     }
 
-    // 음성 출력
     window.speechSynthesis.speak(utterance);
   };
 
