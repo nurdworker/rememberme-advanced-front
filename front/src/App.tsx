@@ -26,12 +26,14 @@ import { IoIosLogOut, IoIosListBox } from "react-icons/io";
 import { MdOutlineEventNote } from "react-icons/md";
 import { FaList } from "react-icons/fa";
 import { AiOutlineHome } from "react-icons/ai";
+import { SiTestcafe } from "react-icons/si";
 
 // components
 import TestZone from "./components/TestZone";
 import Home from "./components/Home";
 import Lists from "./components/Lists";
 import Words from "./components/Words";
+import Tests from "./components/Tests";
 import IncorrectLists from "./components/IncorrectLists";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Auth from "./components/Auth";
@@ -227,6 +229,20 @@ const AppContent = () => {
               </span>
             </Link>
           </div>
+
+          <div
+            className={`nav_item flex items-center space-x-2 ${getNavItemClass(
+              "/tests"
+            )}`}
+          >
+            <Link
+              to="/tests"
+              className="flex items-center space-x-2 bounce-top"
+            >
+              <SiTestcafe className="text-white text-2xl" />
+              <span className="text-white hidden sm:block">Word Test</span>
+            </Link>
+          </div>
         </nav>
 
         <div className="router_screen">
@@ -241,6 +257,7 @@ const AppContent = () => {
               <Route path="/incorrectlists" element={<IncorrectLists />} />
               <Route path="/lists/:id" element={<Words />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/tests" element={<Tests />} />
               {/* <Route path="/incorectlists/:id" element={<IncorrectWords />} /> */}
             </Routes>
           </ErrorBoundary>

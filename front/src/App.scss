@@ -14,8 +14,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100vh; /* 화면 크기만큼 높이를 설정 */
-    overflow-y: auto; /* 수직 스크롤만 활성화 */
+    height: 100vh;
+    overflow-y: auto;
     padding-bottom: 100px;
 
     .nav_top {
@@ -23,7 +23,7 @@
       top: 0;
       left: 0;
       right: 0;
-      z-index: 50; /* Fixed nav should be on top */
+      z-index: 50;
       padding: 10px;
       background: linear-gradient(to right, #3b82f6, #9333ea, #ec4899);
       display: flex;
@@ -39,34 +39,31 @@
       height: 50px;
       position: fixed;
       bottom: 0;
-      z-index: 40; /* Nav bot should be below nav top */
+      z-index: 40;
 
       .nav_item {
-        transition: transform 0.3s ease-in-out; /* 부드럽게 애니메이션 적용 */
-        animation: text-shadow-drop-center 2s both; /* text-shadow-drop-center 애니메이션 추가 */
+        transition: transform 0.3s ease-in-out;
+        animation: text-shadow-drop-center 2s both;
       }
       .nav_item.active {
-        animation: bounce 1.5s ease-in-out infinite; /* 커스텀 bounce 애니메이션을 반복 */
+        animation: bounce 1.5s ease-in-out infinite;
       }
 
-      /* 키프레임을 사용하여 크기 변화를 지정 */
       @keyframes bounce {
         0% {
-          transform: scale(1.2); /* 처음 크기 */
+          transform: scale(1.2);
         }
         50% {
-          transform: scale(1.4); /* 커질 때 */
+          transform: scale(1.4);
         }
         100% {
-          transform: scale(1.2); /* 원래 크기로 돌아오기 */
+          transform: scale(1.2);
         }
       }
 
       .nav_item:not(.active) {
-        transform: opacity(1); /* 애니메이션이 없을 때 원래 크기 */
+        transform: opacity(1);
       }
-
-      /* 직접 작성한 애니메이션을 사용하지 않음: TailwindCSS의 animate-bounce 활용 */
     }
 
     .router_screen {
@@ -77,9 +74,7 @@
       background: linear-gradient(to bottom, #f0e5e5, #e4f7ff);
       position: relative;
       overflow-y: auto;
-      margin-top: calc(
-        62px
-      ); /* Adjust the top margin dynamically based on nav_top height */
+      margin-top: calc(62px);
     }
 
     .test_zone_container {
@@ -179,7 +174,7 @@
   100% {
     transform: translateZ(600px) scale(30);
     opacity: 0;
-    visibility: hidden; /* 요소를 보이지 않게 하고 공간은 그대로 두기 */
+    visibility: hidden;
   }
 }
 //타이틀 텍스트 등장
