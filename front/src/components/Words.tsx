@@ -378,6 +378,7 @@ const Words = () => {
                     isEditModeActive={isEditModeActive}
                     incorrectList_id={list?.linked_incorrect_word_lists?.[0]}
                     list_id={list?._id}
+                    language={list.language}
                   />
                 </div>
               ))
@@ -422,6 +423,7 @@ const Words = () => {
                     incorrectList_id={list.linked_incorrect_word_lists[0]}
                     list_id={list!._id}
                     isIncorrectList={isIncorrectList}
+                    language={list.language}
                   />
                 </div>
               ))

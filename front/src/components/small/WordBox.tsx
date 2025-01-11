@@ -6,8 +6,9 @@ import { useQueue } from "../../QueueContext";
 import { staticData } from "../../staticData";
 
 // icons
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaWikipediaW } from "react-icons/fa";
 import { GrSubtractCircle } from "react-icons/gr";
+import { SiNaver } from "react-icons/si";
 
 // css
 import "./WordBox.scss";
@@ -22,6 +23,7 @@ interface WordProps extends Word {
   isEditModeActive?: boolean;
   incorrectList_id?: string;
   isIncorrectList?: boolean;
+  language: string;
 }
 
 const WordBox: React.FC<WordProps> = ({
@@ -42,6 +44,7 @@ const WordBox: React.FC<WordProps> = ({
   isEditModeActive,
   incorrectList_id,
   isIncorrectList,
+  language,
 }) => {
   // default
   const dispatch = useDispatch();
@@ -148,6 +151,38 @@ const WordBox: React.FC<WordProps> = ({
     editedWordsQueue.enqueue(updatedWord);
   };
 
+  const handleNaverDictionary = (word: string): void => {
+    const encodedWord = encodeURIComponent(word);
+    let url: string | undefined;
+
+    if (language === "en") {
+      url = `https://en.dict.naver.com/#/search?query=${encodedWord}`;
+    } else if (language === "jp") {
+      url = `https://ja.dict.naver.com/#/search?query=${encodedWord}&range=all`;
+    } else if (language === "indo") {
+      url = `https://dict.naver.com/idkodict/#/search?query=${encodedWord}`;
+    }
+
+    if (url) {
+      window.open(url, "_blank");
+    } else {
+      console.error("not supported language");
+    }
+  };
+
+  const handleWikiDictionary = (word: string): void => {
+    const encodedWord = encodeURIComponent(word);
+    let url: string | undefined;
+
+    url = `https://en.wikipedia.org/wiki/${encodedWord}`;
+
+    if (url) {
+      window.open(url, "_blank");
+    } else {
+      console.error("not supported language");
+    }
+  };
+
   // useEffects
   useEffect(() => {
     if (word.length > 8 || newWord.length > 8) {
@@ -247,7 +282,7 @@ const WordBox: React.FC<WordProps> = ({
       <div className="side-content">
         {incorrectList_id && !isIncorrectList && !is_incorrect && (
           <button
-            className="add-incorrect incorrect-btn"
+            className="side-btn add-incorrect"
             onClick={handleAddWordInIncorrectList}
           >
             {" "}
@@ -257,7 +292,7 @@ const WordBox: React.FC<WordProps> = ({
 
         {incorrectList_id && is_incorrect && (
           <button
-            className="substract-incorrect incorrect-btn"
+            className="side-btn substract-incorrect"
             onClick={handleSubtractWordInFromcorrectList}
           >
             {incorrect_lists.map((listId) => (
@@ -265,6 +300,22 @@ const WordBox: React.FC<WordProps> = ({
             ))}
           </button>
         )}
+        <button
+          className="side-btn naver-dic-btn"
+          onClick={() => {
+            handleNaverDictionary(word);
+          }}
+        >
+          <SiNaver className="icon" />
+        </button>
+        <button
+          className="side-btn wiki-dic-btn"
+          onClick={() => {
+            handleWikiDictionary(word);
+          }}
+        >
+          <FaWikipediaW className="icon" />
+        </button>
       </div>
     </div>
   );

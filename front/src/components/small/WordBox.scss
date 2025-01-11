@@ -78,48 +78,58 @@
         background-color: #f5f5f5;
         border: 1px solid #ccc;
         color: #333;
-        padding: 8px; /* 안쪽 여백 */
-        border-radius: 4px; /* 모서리 둥글게 */
-        width: 100%; /* 전체 너비 사용 */
-        font-size: 14px; /* 글자 크기 */
+        padding: 8px;
+        border-radius: 4px;
+        width: 100%;
+        font-size: 14px;
         width: 90%;
       }
 
       .memo-input::placeholder {
-        color: #aaa; /* placeholder 텍스트 색상 */
+        color: #aaa;
       }
       .creation-date {
         font-size: 0.9em;
-        color: #d1d5db; // 더 연한 회색
+        color: #d1d5db;
       }
     }
   }
 
   .side-content {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    width: 15%;
-    background-color: #f9f9f9; /* 배경 색상 */
-    border-top-right-radius: 8px; /* 우측 상단 둥근 모서리 */
-    border-bottom-right-radius: 8px; /* 우측 하단 둥근 모서리 */
-    padding: 10px; /* 여백 */
-    .incorrect-btn {
-      width: 100%;
+    width: 30%;
+    background-color: #f9f9f9;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 10px;
+    .side-btn {
+      width: 40%;
       display: flex;
       justify-content: space-around;
-      background-color: #ffffff; /* 아이콘이 있는 부분의 배경색 */
-      border-radius: 5px; /* 둥글게 */
-      padding: 5px; /* 아이콘 간 간격 */
+      background-color: #ffffff;
+      border-radius: 5px;
+      padding: 5px;
+      margin: 3px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
+
+    .naver-dic-btn {
+      color: #40b65b;
+    }
+
     .substract-incorrect {
-      color: #ff6347; /* 이걸 원하는 색상으로 변경 */
+      width: 90%;
+      color: #ff6347;
     }
     .add-incorrect {
+      width: 90%;
       color: lightgray;
     }
     .icon {
-      font-size: 1.3em;
+      font-size: 1.1em;
       margin: 1px;
     }
   }
@@ -139,6 +149,6 @@
 
 .selected {
   background: linear-gradient(270deg, #e9d7f3, #dfefff, #ffe9ee, #fff7fb);
-  background-size: 400% 400%; // 애니메이션 효과를 위해 크기 조정
-  animation: gradientMove 3s ease infinite; // 애니메이션 적용
+  background-size: 400% 400%;
+  animation: gradientMove 3s ease infinite;
 }

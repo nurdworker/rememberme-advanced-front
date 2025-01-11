@@ -52,6 +52,8 @@ const ListBox: React.FC<ListBoxProps> = ({
       ? staticData.flag_imgs.en
       : language === "jp"
       ? staticData.flag_imgs.jp
+      : language === "indo"
+      ? staticData.flag_imgs.indo
       : "";
   const list: ListBoxProps = {
     name,

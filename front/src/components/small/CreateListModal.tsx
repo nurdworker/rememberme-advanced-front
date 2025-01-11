@@ -126,6 +126,7 @@ const CreateListModal: React.FC<CreateListModalProps> = ({
           >
             <option value="en">English</option>
             <option value="jp">Japanese</option>
+            <option value="indo">indonesian</option>
           </select>
         </div>
         <div className="create-list-modal-footer">

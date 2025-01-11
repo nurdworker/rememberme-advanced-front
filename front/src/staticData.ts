@@ -16,6 +16,7 @@ export const staticData = {
   flag_imgs: {
     en: "https://raw.githubusercontent.com/lipis/flag-icons/e119b66129af6dd849754ccf25dfbf81d4a306d5/flags/1x1/us.svg",
     jp: "https://raw.githubusercontent.com/lipis/flag-icons/e119b66129af6dd849754ccf25dfbf81d4a306d5/flags/1x1/jp.svg",
+    indo: "https://raw.githubusercontent.com/lipis/flag-icons/e119b66129af6dd849754ccf25dfbf81d4a306d5/flags/1x1/id.svg",
   },
   endpoint: process.env.REACT_APP_API_GATEWAY_ENDPOINT as string,
   updateListInArray: (lists: Array<any>, updatedList: any) => {
