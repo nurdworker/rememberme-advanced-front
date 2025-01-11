@@ -9,6 +9,7 @@ import { staticData } from "../../staticData";
 import { FaPlus, FaWikipediaW } from "react-icons/fa";
 import { GrSubtractCircle } from "react-icons/gr";
 import { SiNaver } from "react-icons/si";
+import { RiSpeakAiFill } from "react-icons/ri";
 
 // css
 import "./WordBox.scss";
@@ -183,6 +184,24 @@ const WordBox: React.FC<WordProps> = ({
     }
   };
 
+  const handlePlayAudio = (word: string, language: string = "en"): void => {
+    const utterance = new SpeechSynthesisUtterance(word);
+
+    // 언어에 따라 음성 언어 설정
+    if (language === "en") {
+      utterance.lang = "en-US"; // 영어
+    } else if (language === "jp") {
+      utterance.lang = "ja-JP"; // 일본어
+    } else if (language === "indo") {
+      utterance.lang = "id-ID"; // 인도네시아어
+    } else {
+      utterance.lang = "en-US"; // 기본값은 영어로 설정
+    }
+
+    // 음성 출력
+    window.speechSynthesis.speak(utterance);
+  };
+
   // useEffects
   useEffect(() => {
     if (word.length > 8 || newWord.length > 8) {
@@ -301,12 +320,20 @@ const WordBox: React.FC<WordProps> = ({
           </button>
         )}
         <button
+          className="side-btn play-voice-btn"
+          onClick={() => {
+            handlePlayAudio(word, language);
+          }}
+        >
+          <RiSpeakAiFill className="icon" />
+        </button>
+        <button
           className="side-btn naver-dic-btn"
           onClick={() => {
             handleNaverDictionary(word);
           }}
         >
-          <SiNaver className="icon" />
+          <SiNaver />
         </button>
         <button
           className="side-btn wiki-dic-btn"
@@ -314,7 +341,7 @@ const WordBox: React.FC<WordProps> = ({
             handleWikiDictionary(word);
           }}
         >
-          <FaWikipediaW className="icon" />
+          <FaWikipediaW />
         </button>
       </div>
     </div>
