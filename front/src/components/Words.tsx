@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -92,12 +92,12 @@ const Words = () => {
         return;
       } else {
         console.log("fetching words is on error");
-        // navigate("/");
+        navigate("/");
       }
     } else {
       return;
     }
-  }, [words, list_id, fetchWordsData]);
+  }, [words, list_id, navigate, fetchWordsData]);
 
   const checkListsAndfetchLists = useCallback(async (): Promise<void> => {
     if (!isFetchedListsData) {
@@ -111,11 +111,11 @@ const Words = () => {
           return;
         } else {
           console.log("fetching lists is on error");
-          // navigate("/");
+          navigate("/");
         }
       }
     }
-  }, [lists, fetchListsData, isFetchedListsData]);
+  }, [lists, fetchListsData, navigate, isFetchedListsData]);
 
   useEffect(() => {
     const asyncHandler = async (): Promise<void> => {

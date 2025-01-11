@@ -57,8 +57,6 @@ export const useFuncs = () => {
           { words: filteredWordsArr }
         );
 
-        console.log(response);
-
         if (response.status === 200 || response.status === 201) {
           return Promise.resolve(response);
         }
@@ -84,7 +82,7 @@ export const useFuncs = () => {
           return filteredList;
         });
 
-        console.log("Filtered Lists (압축된 데이터):", filteredListsArr);
+        // console.log("Filtered Lists (압축된 데이터):", filteredListsArr);
 
         const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/lists?request=editLists`,

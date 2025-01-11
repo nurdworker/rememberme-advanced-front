@@ -230,9 +230,9 @@ const AppContent = () => {
         </nav>
 
         <div className="router_screen">
-          <p>{JSON.stringify(testWords)}</p>
+          {/* <p>{JSON.stringify(testWords)}</p>
           <p>끊어!</p>
-          <p>{JSON.stringify(testLists)}</p>
+          <p>{JSON.stringify(testLists)}</p> */}
 
           <ErrorBoundary>
             <Routes>
