@@ -1,5 +1,5 @@
 // public modules
-import React, { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRef } from "react";
 
@@ -37,38 +37,16 @@ const Home = () => {
   // default
   const { editedListsQueue } = useQueue();
   const queueChangedRef = useRef<boolean>(false);
-  const { fetchListsData, showAlert } = useFuncs();
+  const { showAlert } = useFuncs();
   const dispatch = useDispatch();
 
   //mode state
   const isSign = useSelector((state: ReduxState) => state?.mode.isSign);
   const isFetching = useSelector((state: ReduxState) => state?.mode.isFetching);
   const isMobile = useSelector((state: ReduxState) => state.mode.isMobile);
-  const isFetchedListsData = useSelector(
-    (state: ReduxState) => state.mode.isFetchedListsData
-  );
 
   // public data
   const lists = useSelector((state: ReduxState) => state?.data.lists);
-
-  // funcs
-  // const saveListsQueueDataAtDb = useCallback(async (): Promise<void> => {
-  //   if (editedListsQueue.isEmpty()) {
-  //     console.log("Queue is empty, nothing to save.");
-  //     return;
-  //   }
-
-  //   if (queueChangedRef.current) {
-  //     await editedListsQueue.forceTrigger();
-
-  //     queueChangedRef.current = false;
-  //   }
-  // }, [editedListsQueue]);
-
-  // const processQueueThenFetch = useCallback(async (): Promise<void> => {
-  //   await saveListsQueueDataAtDb();
-  //   await fetchListsData();
-  // }, [saveListsQueueDataAtDb, fetchListsData]);
 
   // useEffects
   useEffect(() => {
@@ -76,10 +54,6 @@ const Home = () => {
       queueChangedRef.current = true;
     }
   }, [editedListsQueue]);
-
-  // useEffect(() => {
-  //   processQueueThenFetch();
-  // }, [processQueueThenFetch]);
 
   const handleSign = async (): Promise<void> => {
     try {

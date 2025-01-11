@@ -53,8 +53,8 @@ const AppContent = () => {
   const isLoading = useSelector((state: ReduxState) => state.mode.isLoading);
   const isAlert = useSelector((state: ReduxState) => state.mode.isAlert);
   const alertMessage = useSelector((state: ReduxState) => state.alertMessage);
-  const testWords = useSelector((state: ReduxState) => state.data.words);
-  const testLists = useSelector((state: ReduxState) => state.data.lists);
+  // const testWords = useSelector((state: ReduxState) => state.data.words);
+  // const testLists = useSelector((state: ReduxState) => state.data.lists);
 
   // public data
   const userInfo: UserInfo = useSelector((state: ReduxState) => state.userInfo);
