@@ -44,28 +44,32 @@ const Home = () => {
   const isSign = useSelector((state: ReduxState) => state?.mode.isSign);
   const isFetching = useSelector((state: ReduxState) => state?.mode.isFetching);
   const isMobile = useSelector((state: ReduxState) => state.mode.isMobile);
+  const isFetchedListsData = useSelector(
+    (state: ReduxState) => state.mode.isFetchedListsData
+  );
 
   // public data
   const lists = useSelector((state: ReduxState) => state?.data.lists);
 
   // funcs
-  const saveListsQueueDataAtDb = useCallback(async (): Promise<void> => {
-    if (editedListsQueue.isEmpty()) {
-      console.log("Queue is empty, nothing to save.");
-      return;
-    }
+  // const saveListsQueueDataAtDb = useCallback(async (): Promise<void> => {
+  //   if (editedListsQueue.isEmpty()) {
+  //     console.log("Queue is empty, nothing to save.");
+  //     return;
+  //   }
 
-    if (queueChangedRef.current) {
-      await editedListsQueue.forceTrigger();
+  //   if (queueChangedRef.current) {
+  //     await editedListsQueue.forceTrigger();
 
-      queueChangedRef.current = false;
-    }
-  }, [editedListsQueue]);
+  //     queueChangedRef.current = false;
+  //   }
+  // }, [editedListsQueue]);
 
-  const processQueueThenFetch = useCallback(async (): Promise<void> => {
-    await saveListsQueueDataAtDb();
-    await fetchListsData();
-  }, [saveListsQueueDataAtDb, fetchListsData]);
+  // const processQueueThenFetch = useCallback(async (): Promise<void> => {
+  //   await saveListsQueueDataAtDb();
+  //   await fetchListsData();
+  // }, [saveListsQueueDataAtDb, fetchListsData]);
+
   // useEffects
   useEffect(() => {
     if (!editedListsQueue.isEmpty()) {
@@ -73,9 +77,9 @@ const Home = () => {
     }
   }, [editedListsQueue]);
 
-  useEffect(() => {
-    processQueueThenFetch();
-  }, [processQueueThenFetch]);
+  // useEffect(() => {
+  //   processQueueThenFetch();
+  // }, [processQueueThenFetch]);
 
   const handleSign = async (): Promise<void> => {
     try {
@@ -89,18 +93,12 @@ const Home = () => {
       dispatch({ type: "SET_LOADING", value: false });
     }
   };
-  const testAlert = (): void => {
-    showAlert("안녕dddddddddddddddd?");
-    console.log("gogo");
-  };
 
   return (
     <div className={`container_home ${isMobile ? "mobile" : "desktop"}`}>
       {!isSign && <GoogleLoginButton onClick={handleSign} />}
       {!isFetching && isSign && (
         <div className="contents-home">
-          <div onClick={testAlert}>알러트테스트!!</div>
-
           <div className="title-box">
             <MdFavorite
               className="bounce-top"

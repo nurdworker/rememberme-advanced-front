@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -46,6 +46,10 @@ const Words = () => {
   const isFetching: boolean = useSelector(
     (state: ReduxState) => state.mode.isFetching
   );
+
+  const isFetchedListsData: boolean = useSelector(
+    (state: ReduxState) => state.mode.isFetchedListsData
+  );
   const location = useLocation();
 
   const words: Word[] = useSelector(
@@ -73,25 +77,11 @@ const Words = () => {
     setIsIncorrectList(isIncorrectListParam === "true");
   }, [location.search]);
 
-  const checkListsAndfetchLists = useCallback(async (): Promise<void> => {
-    if (!lists || lists.length === 0) {
-      const fetchingResult: FetchDataReturn = await fetchListsData();
-      if (fetchingResult?.message === "success") {
-        console.log("fetching lists is succeed");
-        return;
-      } else if (fetchingResult?.message === "processing") {
-        console.log("fetching lists is processing");
-        return;
-      } else {
-        console.log("fetching lists is on error");
-        navigate("/");
-      }
-    }
-  }, [lists, navigate, fetchListsData]);
   const checkWordsAndfetchWords = useCallback(async (): Promise<void> => {
     const isListWordsInStore: boolean = words.some(
       (word: Word) => word.list_id === list_id
     );
+
     if (!isListWordsInStore) {
       const fetchingResult: FetchDataReturn = await fetchWordsData(list_id);
       if (fetchingResult?.message === "success") {
@@ -104,8 +94,28 @@ const Words = () => {
         console.log("fetching words is on error");
         navigate("/");
       }
+    } else {
+      return;
     }
   }, [words, list_id, navigate, fetchWordsData]);
+
+  const checkListsAndfetchLists = useCallback(async (): Promise<void> => {
+    if (!isFetchedListsData) {
+      if (!lists || lists.length === 0) {
+        const fetchingResult: FetchDataReturn = await fetchListsData();
+        if (fetchingResult?.message === "success") {
+          console.log("fetching lists is succeed");
+          return;
+        } else if (fetchingResult?.message === "processing") {
+          console.log("fetching lists is processing");
+          return;
+        } else {
+          console.log("fetching lists is on error");
+          navigate("/");
+        }
+      }
+    }
+  }, [lists, fetchListsData, navigate, isFetchedListsData]);
 
   useEffect(() => {
     const asyncHandler = async (): Promise<void> => {
@@ -366,8 +376,8 @@ const Words = () => {
                     isMemoShowActive={isMemoShowActive}
                     isSelected={selectedWordIds.includes(word?._id)}
                     isEditModeActive={isEditModeActive}
-                    incorrectList_id={list.linked_incorrect_word_lists[0]}
-                    list_id={list!._id}
+                    incorrectList_id={list?.linked_incorrect_word_lists?.[0]}
+                    list_id={list?._id}
                   />
                 </div>
               ))

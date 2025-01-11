@@ -66,6 +66,14 @@ const appReducer = (state = initialState, action: Action) => {
           isLoading: action.value,
         },
       };
+    case "SET_FETCHED_LISTS_DATA":
+      return {
+        ...state,
+        mode: {
+          ...state.mode,
+          isLoading: action.value,
+        },
+      };
     case "SET_FETCHING":
       return {
         ...state,

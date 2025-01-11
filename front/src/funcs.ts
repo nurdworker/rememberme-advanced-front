@@ -57,8 +57,6 @@ export const useFuncs = () => {
           { words: filteredWordsArr }
         );
 
-        console.log(response);
-
         if (response.status === 200 || response.status === 201) {
           return Promise.resolve(response);
         }
@@ -84,7 +82,7 @@ export const useFuncs = () => {
           return filteredList;
         });
 
-        console.log("Filtered Lists (압축된 데이터):", filteredListsArr);
+        // console.log("Filtered Lists (압축된 데이터):", filteredListsArr);
 
         const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/lists?request=editLists`,
@@ -215,6 +213,10 @@ export const useFuncs = () => {
 
           if (!fetchedLists || fetchedLists.length === 0) {
             console.log("No lists fetched. Skipping state update.");
+            dispatch({
+              type: "SET_FETCHED_LISTS_DATA",
+              value: true,
+            });
             return { message: "success" };
           }
 
