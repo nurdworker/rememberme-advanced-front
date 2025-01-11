@@ -2,7 +2,7 @@
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0px 4px 20px rgba(255, 99, 71, 0.3); /* 기존 설정 유지 */
+  box-shadow: 0px 4px 20px rgba(255, 99, 71, 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   margin: 5px;
 
@@ -105,8 +105,8 @@
   }
   &.selected {
     background: linear-gradient(270deg, #e9d7f3, #dfefff, #ffe9ee, #fff7fb);
-    background-size: 400% 400%; // 애니메이션 효과를 위해 크기 조정
-    animation: gradientMove 3s ease infinite; // 애니메이션 적용
+    background-size: 400% 400%;
+    animation: gradientMove 3s ease infinite;
   }
 
   &:hover {

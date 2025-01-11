@@ -1,2 +1,125 @@
-.container_preparation {
+.container-preparation {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+  .lists {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+
+    .list-row {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+
+      .list-card-body {
+        display: flex;
+        width: 80%;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 5px;
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* 수평, 수직, 흐림 반경, 색상 */
+
+        .list-card-flag {
+          width: 20%;
+          height: 60px;
+          filter: blur(3px);
+          opacity: 0.8;
+          background-size: cover;
+          background-position: center;
+        }
+
+        .list-card-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-left: 5px;
+          width: 80%;
+          overflow: hidden;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          border-radius: 5px;
+
+          .list-card-title {
+            font-size: 1em;
+            font-weight: bold;
+            width: 50%;
+            .words-count {
+              font-size: 0.8em;
+              color: grey;
+              margin-left: 5px;
+              font-weight: 300;
+              opacity: 0.8;
+            }
+          }
+
+          .list-card-side {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 40%;
+            height: 100%;
+            .list-btn {
+              padding: 5px;
+              border-radius: 5px;
+            }
+            .refresh-words {
+              background: linear-gradient(to right, #87cefa, #00b0ff, #00aaff);
+            }
+            .normal-note {
+              background: linear-gradient(to right, #10b981, #16a34a, #22c55e);
+            }
+            .incorrect-note {
+              background: linear-gradient(to right, #ef4444, #f59e0b, #ec4899);
+            }
+            .icon {
+              font-size: 2rem;
+              color: white;
+            }
+          }
+        }
+      }
+      .selected {
+        background: linear-gradient(270deg, #e9d7f3, #dfefff, #ffe9ee, #fff7fb);
+        background-size: 400% 400%;
+        animation: gradientMove 3s ease infinite;
+        transform: scale(1.05); /* 요소를 살짝 키움 */
+        transition: transform 0.3s ease-in-out; /* 좀 더 부드럽고 긴 애니메이션 */
+      }
+
+      :not(.selected) {
+        transform: scale(1); /* 원래 크기로 돌아가게 */
+        transition: transform 0.3s ease-in-out; /* 동일한 애니메이션 적용 */
+      }
+      .pulse-effect {
+        display: inline-block;
+        animation: pulse 1s infinite;
+      }
+    }
+  }
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1); /* 원래 크기 */
+  }
+  50% {
+    transform: scale(1.1); /* 크기를 약간 크게 */
+  }
+  100% {
+    transform: scale(1); /* 원래 크기로 돌아옴 */
+  }
 }

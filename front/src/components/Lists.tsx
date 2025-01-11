@@ -34,12 +34,18 @@ const Lists = () => {
   const dispatch = useDispatch();
 
   //mode state
-  const isSign = useSelector((state: ReduxState) => state?.mode.isSign);
-  const isFetching = useSelector((state: ReduxState) => state.mode.isFetching);
-  const isMobile = useSelector((state: ReduxState) => state.mode.isMobile);
+  const isSign: boolean = useSelector(
+    (state: ReduxState) => state?.mode.isSign
+  );
+  const isFetching: boolean = useSelector(
+    (state: ReduxState) => state.mode.isFetching
+  );
+  const isMobile: boolean = useSelector(
+    (state: ReduxState) => state.mode.isMobile
+  );
 
   //public data
-  const lists = useSelector((state: ReduxState) => state.data.lists);
+  const lists: List[] = useSelector((state: ReduxState) => state.data.lists);
   const { editedListsQueue } = useQueue();
 
   //component state
