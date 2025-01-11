@@ -58,7 +58,7 @@ const WordBox: React.FC<WordProps> = ({
   const words: Word[] = useSelector((state: ReduxState) => state.data.words);
 
   // component state
-  const [fontSize, setFontSize] = useState<number>(40);
+  const [fontSize, setFontSize] = useState<number>(20);
   const [isEditingWord, setIsEditingWord] = useState<boolean>(false);
   const [isEditingMean, setIsEditingMean] = useState<boolean>(false);
   const [isEditingMemo, setIsEditingMemo] = useState<boolean>(false);
@@ -203,9 +203,9 @@ const WordBox: React.FC<WordProps> = ({
   // useEffects
   useEffect(() => {
     if (word.length > 8 || newWord.length > 8) {
-      setFontSize(20);
+      setFontSize(13);
     } else {
-      setFontSize(30);
+      setFontSize(20);
     }
   }, [word, newWord]);
 

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -12,10 +12,10 @@ import { Word, List, ReduxState, FetchDataReturn } from "../../types/index";
 
 import { SlNotebook } from "react-icons/sl";
 import { IoMdRefresh } from "react-icons/io";
+import { FaNoteSticky } from "react-icons/fa6";
 
 const Preparation: React.FC = () => {
   const location = useLocation();
-  console.log("hello preparation");
   const searchParams = new URLSearchParams(location.search);
   const directListId: string | null = searchParams.get("list_id");
   const isDirectListIncorrect: string | null = searchParams.get(
@@ -30,10 +30,19 @@ const Preparation: React.FC = () => {
   const [checkedLists, setCheckedLists] = useState<
     { list_id: string; isIncorrect: boolean }[]
   >([]);
+  const [refreshedLists, setRefreshedLists] = useState<string[]>([]);
+  const [selectedMode, setSelectedMode] = useState<string>("wordToMean");
 
-  console.log(directListId);
-  console.log(isDirectListIncorrect);
+  useEffect(() => {
+    if (directListId && isDirectListIncorrect) {
+      const isIncorrect = isDirectListIncorrect === "true";
 
+      setCheckedLists((prevCheckedLists) => [
+        ...prevCheckedLists,
+        { list_id: directListId, isIncorrect },
+      ]);
+    }
+  }, [directListId, isDirectListIncorrect]);
   const handleButtonClick = (listId: string, isIncorrect: boolean) => {
     setCheckedLists((prevCheckedLists) => {
       const existingListIndex = prevCheckedLists.findIndex(
@@ -77,6 +86,26 @@ const Preparation: React.FC = () => {
     return words.filter((word) => word.list_id === list_id).length;
   };
 
+  const incorrectWordsCount = (list_id: string): number => {
+    return words.filter((word) => word.list_id === list_id && word.is_incorrect)
+      .length;
+  };
+
+  const totalWordsCount = (): number => {
+    return checkedLists.reduce((total, item) => {
+      if (item.isIncorrect) {
+        return total + incorrectWordsCount(item.list_id);
+      } else {
+        return total + wordsCount(item.list_id);
+      }
+    }, 0);
+  };
+
+  const listTitle = (list_id: string): string => {
+    const list: List = lists.find((list) => list._id === list_id);
+    return list ? list.name : "";
+  };
+
   const checkWordsAndfetchWords = useCallback(
     async (list_id: string): Promise<void> => {
       const isListWordsInStore: boolean = words.some(
@@ -102,8 +131,19 @@ const Preparation: React.FC = () => {
     [words, navigate, fetchWordsData]
   );
 
+  const handleRefreshButtonClick = (list_id: string) => {
+    if (!refreshedLists.includes(list_id)) {
+      setRefreshedLists((prev) => [...prev, list_id]);
+      refreshWordsCount(list_id);
+    }
+  };
+
   const refreshWordsCount = async (list_id): Promise<void> => {
     await checkWordsAndfetchWords(list_id);
+  };
+
+  const handleModeSelection = (mode: string) => {
+    setSelectedMode(mode);
   };
 
   return (
@@ -111,6 +151,49 @@ const Preparation: React.FC = () => {
       <p>{JSON.stringify(checkedLists)}</p>
       {/* <p>{JSON.stringify(lists)}</p> */}
       {/* <p>{JSON.stringify(words)}</p> */}
+      {selectedMode}
+      <nav className="preparation-nav">
+        <div className="preparation-contents">
+          {checkedLists.length === 0 ? (
+            <div className="empty-message">please select lists..</div>
+          ) : (
+            checkedLists.map((item) => (
+              <div className="preparation-summary">
+                <h5>{listTitle(item.list_id)}</h5>
+                {item.isIncorrect && <span>오답노트</span>}
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="preparation-btn">
+          <p>{totalWordsCount()} Words</p>
+          <p>Start Test!</p>
+        </div>
+      </nav>
+      <div className="preparation-title">Select test mode!</div>
+      <div className="preparation-select-mode">
+        <button
+          className={`mode-button ${
+            selectedMode === "wordToMean" ? "selected" : ""
+          }`}
+          onClick={() => handleModeSelection("wordToMean")}
+        >
+          From Word to Mean
+        </button>
+
+        <button
+          className={`mode-button ${
+            selectedMode === "meanToWord" ? "selected" : ""
+          }`}
+          onClick={() => handleModeSelection("meanToWord")}
+        >
+          From Mean to Word
+        </button>
+
+        {/* 선택된 모드를 표시 */}
+      </div>
+      <div className="preparation-title">Select your word lists!</div>
       <div className="lists">
         {lists
           .filter((list: List) => !list.is_deleted)
@@ -139,44 +222,51 @@ const Preparation: React.FC = () => {
                   </h3>
 
                   <div className="list-card-side">
-                    {wordsCount(list._id) === 0 && (
+                    {wordsCount(list._id) === 0 &&
+                      !refreshedLists.includes(list._id) && (
+                        <div
+                          className="list-btn refresh-words"
+                          onClick={() => {
+                            handleRefreshButtonClick(list._id);
+                            refreshWordsCount(list._id);
+                          }}
+                        >
+                          <IoMdRefresh className="icon" />
+                        </div>
+                      )}
+                    {wordsCount(list._id) > 0 && (
                       <div
-                        className="list-btn refresh-words"
-                        onClick={() => refreshWordsCount(list._id)}
-                      >
-                        <IoMdRefresh className="icon" />
-                      </div>
-                    )}
-                    <div
-                      className={`list-btn normal-note ${
-                        checkedLists.some(
-                          (item) =>
-                            item.list_id === list._id &&
-                            item.isIncorrect === false
-                        )
-                          ? "pulse-effect"
-                          : ""
-                      }`}
-                      onClick={() => handleButtonClick(list._id, false)}
-                    >
-                      <SlNotebook className="icon" />
-                    </div>
-                    {list.linked_incorrect_word_lists.length > 0 && (
-                      <div
-                        className={`list-btn incorrect-note ${
+                        className={`list-btn normal-note ${
                           checkedLists.some(
                             (item) =>
                               item.list_id === list._id &&
-                              item.isIncorrect === true
+                              item.isIncorrect === false
                           )
                             ? "pulse-effect"
                             : ""
                         }`}
-                        onClick={() => handleButtonClick(list._id, true)}
+                        onClick={() => handleButtonClick(list._id, false)}
                       >
                         <SlNotebook className="icon" />
                       </div>
                     )}
+                    {list.linked_incorrect_word_lists.length > 0 &&
+                      incorrectWordsCount(list._id) > 0 && (
+                        <div
+                          className={`list-btn incorrect-note ${
+                            checkedLists.some(
+                              (item) =>
+                                item.list_id === list._id &&
+                                item.isIncorrect === true
+                            )
+                              ? "pulse-effect"
+                              : ""
+                          }`}
+                          onClick={() => handleButtonClick(list._id, true)}
+                        >
+                          <FaNoteSticky className="icon" />
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>

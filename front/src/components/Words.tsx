@@ -21,6 +21,7 @@ import { IoTrashBin, IoShuffle } from "react-icons/io5";
 import { MdNoteAdd } from "react-icons/md";
 import { SlNotebook } from "react-icons/sl";
 import { RiArrowGoBackFill } from "react-icons/ri";
+import { SiTestcafe } from "react-icons/si";
 
 //custom hook funcs
 import { auth } from "../auth";
@@ -282,6 +283,14 @@ const Words = () => {
     navigate(`/lists/${list_id}`);
   };
 
+  const handleTakeDirectTest = (
+    list_id: string,
+    isIncorrectList: boolean
+  ): void => {
+    navigate(
+      `/tests?mode=preparation&list_id=${list_id}&is_direct_list_incorrect=${isIncorrectList}`
+    );
+  };
   return (
     <div className="container_words">
       <CreateWordModal
@@ -304,17 +313,23 @@ const Words = () => {
         </div>
         <div>
           {!isIncorrectList && (
-            <div>
+            <div className="words-btns">
+              <button
+                className="word-btn test-btn"
+                onClick={() => handleTakeDirectTest(list._id, false)}
+              >
+                <SiTestcafe className="icon" />
+              </button>
               {list?.linked_incorrect_word_lists.length === 0 ? (
                 <button
-                  className="incorrect-list-btn create-incorrect-list-button"
+                  className="word-btn  create-incorrect-list-button"
                   onClick={handleCreateIncorrectList}
                 >
                   <MdNoteAdd className="icon" />
                 </button>
               ) : (
                 <button
-                  className="incorrect-list-btn join-incorrect-list-button"
+                  className="word-btn  join-incorrect-list-button"
                   onClick={handleJoinIncorrectList}
                 >
                   <FaNoteSticky className="icon" />
@@ -323,9 +338,15 @@ const Words = () => {
             </div>
           )}
           {isIncorrectList && (
-            <div>
+            <div className="words-btns">
               <button
-                className="incorrect-list-btn back-to-list-button"
+                className="word-btn test-btn"
+                onClick={() => handleTakeDirectTest(list._id, true)}
+              >
+                <SiTestcafe className="icon" />
+              </button>
+              <button
+                className="word-btn  back-to-list-button"
                 onClick={handleJoinList}
               >
                 <RiArrowGoBackFill className="icon" />
@@ -378,7 +399,7 @@ const Words = () => {
                     isEditModeActive={isEditModeActive}
                     incorrectList_id={list?.linked_incorrect_word_lists?.[0]}
                     list_id={list?._id}
-                    language={list.language}
+                    language={list?.language}
                   />
                 </div>
               ))
