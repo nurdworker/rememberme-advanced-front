@@ -132,6 +132,27 @@ const Home = () => {
               <p>No Japanese word lists</p>
             )}
           </div>
+
+          <div className="title-box">
+            <img
+              className="lang-img bounce-top"
+              src={staticData.flag_imgs.indo}
+              alt="INDO Flag"
+            />
+            <h6 className="title-lang">Indonesian</h6>
+          </div>
+
+          <div className="lists">
+            {lists && lists.length > 0 ? (
+              lists
+                .filter(
+                  (list: List) => list.language === "indo" && !list.is_deleted
+                )
+                .map((list: List) => <ListBox key={list._id} {...list} />)
+            ) : (
+              <p>No Indonesian word lists</p>
+            )}
+          </div>
         </div>
       )}
     </div>
