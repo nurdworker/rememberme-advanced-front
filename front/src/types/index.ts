@@ -40,6 +40,7 @@ export interface TestingData {
   testMode: string;
   data: {
     nowIndex: number;
+    listsData: List[];
     wordsData: Word[];
     optionData: string[][];
     correctOptionData: string[];

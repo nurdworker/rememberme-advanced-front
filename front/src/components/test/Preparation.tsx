@@ -240,9 +240,16 @@ const Preparation: React.FC = () => {
     return true;
   };
 
+  const filteredLists = checkedLists
+    .map(({ list_id }) => {
+      return lists.filter((list) => list._id === list_id);
+    })
+    .flat();
+
   const handleStartTest = async (): Promise<void> => {
     if (await checkingTestPreparation()) {
       const wordsData: Word[] = await filterWordsByCheckedLists();
+      const listsData: List[] = filteredLists;
       const optionData: string[][] = await generateOptionData(
         selectedMode,
         wordsData
@@ -264,6 +271,7 @@ const Preparation: React.FC = () => {
         testMode: selectedMode,
         data: {
           nowIndex: 0,
+          listsData,
           wordsData,
           optionData,
           correctOptionData,
