@@ -212,9 +212,16 @@ const Preparation: React.FC = () => {
   };
 
   const generateCorrectAnswers = async (
-    wordsData: Word[]
+    wordsData: Word[],
+    testMode: string
   ): Promise<string[]> => {
-    return wordsData.map((word) => word.mean);
+    return wordsData.map((word) => {
+      if (testMode === "wordToMean") {
+        return word.mean;
+      } else if (testMode === "meanToWord") {
+        return word.word;
+      }
+    });
   };
 
   const checkingTestPreparation = async (): Promise<boolean> => {
@@ -232,6 +239,7 @@ const Preparation: React.FC = () => {
     }
     return true;
   };
+
   const handleStartTest = async (): Promise<void> => {
     if (await checkingTestPreparation()) {
       const wordsData: Word[] = await filterWordsByCheckedLists();
@@ -240,7 +248,8 @@ const Preparation: React.FC = () => {
         wordsData
       );
       const correctOptionData: string[] = await generateCorrectAnswers(
-        wordsData
+        wordsData,
+        selectedMode
       );
       const chosenOptionData: (string | null)[] = new Array(
         correctOptionData.length
