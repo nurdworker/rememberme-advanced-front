@@ -203,9 +203,9 @@ const WordBox: React.FC<WordProps> = ({
   // useEffects
   useEffect(() => {
     if (word.length > 8 || newWord.length > 8) {
-      setFontSize(13);
-    } else {
       setFontSize(20);
+    } else {
+      setFontSize(30);
     }
   }, [word, newWord]);
 

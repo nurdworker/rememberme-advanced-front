@@ -8,7 +8,13 @@ import { staticData } from "../../staticData";
 // custom
 import { useFuncs } from "../../funcs";
 // types
-import { Word, List, ReduxState, FetchDataReturn } from "../../types/index";
+import {
+  Word,
+  List,
+  ReduxState,
+  FetchDataReturn,
+  TestingData,
+} from "../../types/index";
 
 import { SlNotebook } from "react-icons/sl";
 import { IoMdRefresh } from "react-icons/io";
@@ -22,7 +28,7 @@ const Preparation: React.FC = () => {
     "is_direct_list_incorrect"
   );
   const navigate = useNavigate();
-  const { fetchWordsData } = useFuncs();
+  const { fetchWordsData, showAlert } = useFuncs();
 
   const lists: List[] = useSelector((state: ReduxState) => state.data.lists);
   const words: Word[] = useSelector((state: ReduxState) => state.data.words);
@@ -145,13 +151,134 @@ const Preparation: React.FC = () => {
   const handleModeSelection = (mode: string) => {
     setSelectedMode(mode);
   };
+  const [test1, setTest1] = useState(null);
+  const [test2, setTest2] = useState(null);
+  const [test3, setTest3] = useState(null);
+
+  const generateOptionData = (
+    testMode: string,
+    wordsData: Word[]
+  ): string[][] => {
+    return testMode === "wordToMean"
+      ? wordsData.map((currentWord) => {
+          const allMeans = wordsData.map((word) => word.mean);
+          const randomMeans = generateRandomOptions(allMeans, currentWord.mean);
+          return randomMeans;
+        })
+      : testMode === "meanToWord"
+      ? wordsData.map((currentWord) => {
+          const allWords = wordsData.map((word) => word.word);
+          const randomWords = generateRandomOptions(allWords, currentWord.word);
+          return randomWords;
+        })
+      : [];
+  };
+
+  const generateRandomOptions = (
+    allOptions: string[],
+    correctOption: string,
+    optionCount: number = 5
+  ): string[] => {
+    const randomOptions = new Set([correctOption]);
+
+    // 나머지 틀린 보기들을 추가
+    while (randomOptions.size < optionCount) {
+      const randomIndex = Math.floor(Math.random() * allOptions.length);
+      randomOptions.add(allOptions[randomIndex]);
+    }
+
+    return Array.from(randomOptions).sort(() => Math.random() - 0.5);
+  };
+
+  const filterWordsByCheckedLists = async (): Promise<Word[]> => {
+    const wordsData: Word[] = [];
+
+    checkedLists.forEach(({ list_id, isIncorrect }) => {
+      const filteredWords: Word[] = words.filter((word: Word) => {
+        if (word.list_id !== list_id) return false;
+
+        if (isIncorrect) {
+          return word.is_incorrect === true;
+        }
+        return true;
+      });
+
+      wordsData.push(...filteredWords);
+    });
+
+    const shuffledWords: Word[] = wordsData.sort(() => Math.random() - 0.5);
+
+    return shuffledWords;
+  };
+
+  const generateCorrectAnswers = async (
+    wordsData: Word[]
+  ): Promise<string[]> => {
+    return wordsData.map((word) => word.mean);
+  };
+
+  const checkingTestPreparation = async (): Promise<boolean> => {
+    if (checkedLists.length === 0) {
+      showAlert("The selected list is empty.");
+      return false;
+    }
+    if (totalWordsCount() < 5) {
+      showAlert("Choose more words.");
+      return false;
+    }
+    if (totalWordsCount() > 100) {
+      showAlert("Words are too many.");
+      return false;
+    }
+    return true;
+  };
+  const handleStartTest = async (): Promise<void> => {
+    if (await checkingTestPreparation()) {
+      const wordsData: Word[] = await filterWordsByCheckedLists();
+      const optionData: string[][] = await generateOptionData(
+        selectedMode,
+        wordsData
+      );
+      const correctOptionData: string[] = await generateCorrectAnswers(
+        wordsData
+      );
+      const chosenOptionData: (string | null)[] = new Array(
+        correctOptionData.length
+      ).fill(null);
+
+      // setTest1(wordsData);
+      // setTest2(optionData);
+      // setTest3(correctOptionData);
+
+      const testingData: TestingData = {
+        testLists: [...checkedLists],
+        testMode: selectedMode,
+        data: {
+          nowIndex: 0,
+          wordsData,
+          optionData,
+          correctOptionData,
+          chosenOptionData,
+        },
+      };
+
+      localStorage.setItem("testingData", JSON.stringify(testingData));
+      showAlert("Starting the test. Good luck!");
+    }
+  };
 
   return (
     <div className="container-preparation">
-      <p>{JSON.stringify(checkedLists)}</p>
+      {/* <p>{JSON.stringify(checkedLists)}</p> */}
       {/* <p>{JSON.stringify(lists)}</p> */}
       {/* <p>{JSON.stringify(words)}</p> */}
-      {selectedMode}
+      {/* <pre>{JSON.stringify(test1, null, 2)}</pre>
+      <p>끊어어</p>
+      <pre>{JSON.stringify(test2, null, 2)}</pre>
+      <p>끊어어</p>
+
+      <pre>{JSON.stringify(test3, null, 2)}</pre>
+      {selectedMode} */}
       <nav className="preparation-nav">
         <div className="preparation-contents">
           {checkedLists.length === 0 ? (
@@ -166,7 +293,7 @@ const Preparation: React.FC = () => {
           )}
         </div>
 
-        <div className="preparation-btn">
+        <div className="preparation-btn" onClick={handleStartTest}>
           <p>{totalWordsCount()} Words</p>
           <p>Start Test!</p>
         </div>

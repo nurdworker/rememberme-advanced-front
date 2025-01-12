@@ -35,6 +35,18 @@ export interface Word {
   incorrect_lists: string[];
 }
 
+export interface TestingData {
+  testLists: { list_id: string; isIncorrect: boolean }[];
+  testMode: string;
+  data: {
+    nowIndex: number;
+    wordsData: Word[];
+    optionData: string[][];
+    correctOptionData: string[];
+    chosenOptionData: (string | null)[];
+  };
+}
+
 // redux
 export interface ModeState {
   isSign: boolean;
