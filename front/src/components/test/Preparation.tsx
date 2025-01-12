@@ -267,6 +267,7 @@ const Preparation: React.FC = () => {
       // setTest3(correctOptionData);
 
       const testingData: TestingData = {
+        test_id: Date.now().toString(),
         testLists: [...checkedLists],
         testMode: selectedMode,
         data: {
@@ -281,6 +282,7 @@ const Preparation: React.FC = () => {
 
       localStorage.setItem("testingData", JSON.stringify(testingData));
       showAlert("Starting the test. Good luck!");
+      navigate("/tests?mode=testing");
     }
   };
 

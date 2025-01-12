@@ -36,6 +36,7 @@ export interface Word {
 }
 
 export interface TestingData {
+  test_id: string;
   testLists: { list_id: string; isIncorrect: boolean }[];
   testMode: string;
   data: {

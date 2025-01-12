@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 // components
 import Preparation from "./test/Preparation";
+import Testing from "./test/Testing";
 
 const Tests: React.FC = () => {
   const location = useLocation();
@@ -31,7 +32,8 @@ const Tests: React.FC = () => {
       {mode === "preparation" && (
         <div className="screen">{<Preparation />}</div>
       )}
-      {mode === null && (
+      {mode === "testing" && <div className="screen">{<Testing />}</div>}
+      {!mode && (
         <div className="screen">
           <div className="start-test-box flex justify-center items-center mt-8">
             <button
