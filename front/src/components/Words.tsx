@@ -356,16 +356,6 @@ const Words = () => {
         </div>
       </div>
 
-      {/* <h2>{list?.name} 단어장</h2>
-      <p
-        style={{
-          width: "100%",
-          maxWidth: "100%",
-          overflowX: "auto",
-        }}
-      >
-        {JSON.stringify(lists, null, 2)}
-      </p> */}
       {!isIncorrectList && (
         <div className="word-lists">
           {isFetching ? (

@@ -51,7 +51,6 @@ const WordBox: React.FC<WordProps> = ({
   // const dispatch = useDispatch();
 
   // mode state
-  // const isMobile = useSelector((state: any) => state.mode.isMobile);
 
   // public data
   const { editedWordsQueue } = useQueue();
@@ -83,7 +82,7 @@ const WordBox: React.FC<WordProps> = ({
       // dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
       updateEditedWordFromProps(updatedMemoWord);
 
-      // editedWordsQueue.enqueue(updatedMemoWord);
+      editedWordsQueue.enqueue(updatedMemoWord);
       setIsEditingMemo(false);
       // 수정된 경우에만 newMemo 초기화
       setNewMemo("");
@@ -104,7 +103,7 @@ const WordBox: React.FC<WordProps> = ({
 
     // dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
     updateEditedWordFromProps(updatedWord);
-    // editedWordsQueue.enqueue(updatedWord);
+    editedWordsQueue.enqueue(updatedWord);
   };
 
   const handleSubtractWordInFromcorrectList = (): void => {
@@ -118,7 +117,7 @@ const WordBox: React.FC<WordProps> = ({
 
     // dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
     updateEditedWordFromProps(updatedWord);
-    // editedWordsQueue.enqueue(updatedWord);
+    editedWordsQueue.enqueue(updatedWord);
   };
 
   const handleNaverDictionary = (word: string): void => {
@@ -184,6 +183,11 @@ const WordBox: React.FC<WordProps> = ({
     }
   }, [isEditModeActive]);
 
+  useEffect(() => {
+    console.log("음");
+    setNewMemo("");
+  }, [wordData._id]);
+
   // handler for convenience
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -233,8 +237,8 @@ const WordBox: React.FC<WordProps> = ({
             {new Date(creation_date).toLocaleDateString()}
           </p>
         </div>
-        <p>{"is_incorrect : " + String(is_incorrect)}</p>
-        <p>{"incorrectList_id : " + String(incorrectList_id)}</p>
+        {/* <p>{"is_incorrect : " + String(is_incorrect)}</p>
+        <p>{"incorrectList_id : " + String(incorrectList_id)}</p> */}
       </div>
 
       <div className="side-content">

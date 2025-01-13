@@ -9,9 +9,10 @@ import {
   TestingData,
 } from "../../types/index";
 
-import { FaPlus, FaEdit } from "react-icons/fa";
+import { useFuncs } from "../../funcs";
+
+import { FaEdit } from "react-icons/fa";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
-import { IoTrashBin, IoShuffle } from "react-icons/io5";
 import { GiConfirmed } from "react-icons/gi";
 import { IoMdExit } from "react-icons/io";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
@@ -19,6 +20,23 @@ import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import "./Testing.scss";
 
 import TestWordBox from "./small/TestWordBox";
+
+const GaugeComponent = ({ data }: { data: (string | null)[] }) => {
+  const totalItems = data.length;
+  const filledItems = data.filter((item) => item !== null).length;
+  const progress = (filledItems / totalItems) * 100;
+
+  return (
+    <div className="w-full max-w-md mx-auto">
+      <div className="bg-gray-200 h-4 rounded-full overflow-hidden">
+        <div className="h-full bg-blue-500" style={{ width: `${progress}%` }} />
+      </div>
+      <p className="text-center mt-2">{`Progress: ${filledItems}/${totalItems} (${Math.round(
+        progress
+      )}%)`}</p>
+    </div>
+  );
+};
 
 const Testing: React.FC = () => {
   const navigate = useNavigate();
@@ -28,6 +46,8 @@ const Testing: React.FC = () => {
   const [isMeanShowActive, setIsMeanShowActive] = useState<boolean>(false);
   const [isEditModeActive, setIsEditModeActive] = useState<boolean>(false);
   const [isAnswerShowActive, setIsAnswerShowActive] = useState<boolean>(false);
+
+  const { showAlert } = useFuncs();
 
   const currentWord: Word =
     testingData?.data?.wordsData[testingData?.data?.nowIndex];
@@ -69,14 +89,14 @@ const Testing: React.FC = () => {
       if (newIndex > 0) {
         newIndex -= 1;
       } else {
-        alert("Cannot decrease further. Already at the first item.");
+        showAlert("Cannot decrease further. \nAlready at the first item.");
         return;
       }
     } else if (direction === "next") {
       if (newIndex < maxIndex) {
         newIndex += 1;
       } else {
-        alert("Cannot increase further. Already at the last item.");
+        showAlert("Cannot increase further.\nAlready at the last item.");
         return;
       }
     }
@@ -151,29 +171,54 @@ const Testing: React.FC = () => {
     });
   };
 
+  const handleSelectOption = (selectedOption: string): void => {
+    setTestingData((prevData) => {
+      const updatedData = {
+        ...prevData,
+        data: {
+          ...prevData.data,
+          chosenOptionData: prevData.data.chosenOptionData.map((item, index) =>
+            index === prevData.data.nowIndex ? selectedOption : item
+          ),
+        },
+      };
+
+      localStorage.setItem("testingData", JSON.stringify(updatedData));
+
+      return updatedData;
+    });
+
+    console.log(selectedOption);
+  };
+
+  const handleExitTest = (): void => {
+    localStorage.removeItem("testingData");
+    navigate("/");
+  };
+
+  const testtest = () => {
+    setTestingData((prevData) => ({
+      ...prevData,
+      data: {
+        ...prevData.data,
+        nowIndex: 3, // nowIndex 값을 1로 업데이트
+      },
+    }));
+  };
+
   return (
     <div className="container_testing">
       {/* <p>{JSON.stringify(testingData)}</p> */}
       <p>{testingData?.data?.nowIndex}</p>
-      <p>{JSON.stringify(currentWord)}</p>
-      <p>{JSON.stringify(currentList)}</p>
-      <button
-        onClick={() => {
-          changeIndex("prev");
-        }}
-      >
-        prev
-      </button>
-      <button
-        onClick={() => {
-          changeIndex("next");
-        }}
-      >
-        next
-      </button>
+      {/* <pre>{JSON.stringify(currentWord, null, 2)}</pre>
+      <pre>{JSON.stringify(currentList, null, 2)}</pre> */}
+      <button onClick={testtest}>123123123</button>
       {testingData && testingData.data && (
         <div className="question-header">
           {testingData?.data?.nowIndex + 1}번 문제
+          <div className="flex justify-center items-center">
+            <GaugeComponent data={testingData.data.chosenOptionData} />
+          </div>
         </div>
       )}
       {testingData && testingData.data && (
@@ -193,7 +238,35 @@ const Testing: React.FC = () => {
         </div>
       )}
       {testingData && testingData.data && (
-        <div className="question-options">options</div>
+        <div className="question-options">
+          {/* <pre>
+            {JSON.stringify(
+              testingData.data.optionData[testingData.data.nowIndex],
+              null,
+              2
+            )}
+          </pre> */}
+          <pre>
+            {JSON.stringify(testingData.data.chosenOptionData, null, 2)}
+          </pre>
+          {testingData.data.optionData[testingData.data.nowIndex]?.map(
+            (option: string, index: number) => (
+              <div
+                className={`option-card ${
+                  testingData.data.chosenOptionData[
+                    testingData.data.nowIndex
+                  ] === option
+                    ? "selected"
+                    : ""
+                }`}
+                key={index}
+                onClick={() => handleSelectOption(option)}
+              >
+                <p>{option}</p>
+              </div>
+            )
+          )}
+        </div>
       )}
       {testingData && (
         <div className="question-btns">
@@ -238,7 +311,7 @@ const Testing: React.FC = () => {
           >
             <MdNavigateBefore className="icon" />
           </div>
-          <div className="btn small">
+          <div className="btn small" onClick={handleExitTest}>
             <IoMdExit className="icon" />
           </div>
           <div className="btn small">

@@ -11,8 +11,52 @@
     border: 1px solid green;
   }
   .question-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 30px;
     width: 100%;
-    border: 1px solid yellow;
+    .option-card {
+      background-color: #f9fbff; /* 부드러운 파스텔 블루 */
+      border: 1px solid #d0e2ff; /* 연한 블루 테두리 */
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05); /* 가벼운 그림자 */
+      border-radius: 8px;
+      padding: 12px 20px;
+      margin: 10px;
+      font-size: 16px;
+      text-align: center;
+      width: 300px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      p {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        width: 100%;
+        font-size: 1.5em;
+        font-weight: 700;
+        color: transparent;
+        background: linear-gradient(90deg, #0097d3, #003db3);
+        background-clip: text;
+        -webkit-background-clip: text;
+        margin-top: 5px;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        background-color: #e9ecef;
+      }
+
+      &:selected {
+        background: linear-gradient(270deg, #e9d7f3, #dfefff, #ffe9ee, #fff7fb);
+        background-size: 400% 400%;
+        animation: gradientMove 3s ease infinite;
+      }
+    }
   }
   .question-btns {
     border: 1px solid blue;
@@ -192,5 +236,17 @@
         color: white;
       }
     }
+  }
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

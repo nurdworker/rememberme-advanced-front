@@ -11,7 +11,7 @@ interface AlertModalProps {
 }
 
 const AlertModal: React.FC<AlertModalProps> = ({ message, onClose }) => {
-  //component state
+  // component state
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
   const [isHidden, setIsHidden] = useState<boolean>(false);
@@ -52,7 +52,15 @@ const AlertModal: React.FC<AlertModalProps> = ({ message, onClose }) => {
       >
         <div className="alert-message">
           <img src="/nw-emo.png" alt="emoticon" />
-          <p>{message}</p>
+          {message ? (
+            message.split("\n").map((line, index) => (
+              <p key={index} className="alert-line">
+                {line}
+              </p>
+            ))
+          ) : (
+            <p>No message</p>
+          )}
         </div>
       </div>
     </div>
