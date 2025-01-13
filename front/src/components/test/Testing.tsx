@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // types
-import {
-  Word,
-  List,
-  ReduxState,
-  FetchDataReturn,
-  TestingData,
-} from "../../types/index";
+import { Word, List, TestingData } from "../../types/index";
 
 import { useFuncs } from "../../funcs";
 
@@ -201,22 +195,60 @@ const Testing: React.FC = () => {
       ...prevData,
       data: {
         ...prevData.data,
-        nowIndex: 3, // nowIndex 값을 1로 업데이트
+        nowIndex: 3,
       },
     }));
+  };
+
+  const joinToList = (list_id: string, isIncorrect: boolean): void => {
+    if (isIncorrect) {
+      navigate(`/lists/${list_id}?isIncorrectList=true`);
+    } else {
+      navigate(`/lists/${list_id}`);
+    }
+  };
+
+  const listTitle = (list_id: string): string => {
+    const list = testingData?.data?.listsData.find(
+      (item) => item._id === list_id
+    );
+    return list ? list.name : "Unknown List";
   };
 
   return (
     <div className="container_testing">
       {/* <p>{JSON.stringify(testingData)}</p> */}
-      <p>{testingData?.data?.nowIndex}</p>
+      {/* <p>{testingData?.data?.nowIndex}</p> */}
       {/* <pre>{JSON.stringify(currentWord, null, 2)}</pre>
       <pre>{JSON.stringify(currentList, null, 2)}</pre> */}
-      <button onClick={testtest}>123123123</button>
+      {/* <button onClick={testtest}>123123123</button> */}
       {testingData && testingData.data && (
         <div className="question-header">
-          {testingData?.data?.nowIndex + 1}번 문제
-          <div className="flex justify-center items-center">
+          <div className="question-main-info">
+            <h1 className="testing-question-number">
+              # {testingData?.data?.nowIndex + 1}
+            </h1>
+            <div className="testing-lists-info">
+              {testingData?.testLists.map((item) => (
+                <p
+                  className="list-name"
+                  key={item.list_id}
+                  onClick={() => {
+                    joinToList(item.list_id, item.isIncorrect);
+                  }}
+                >
+                  {listTitle(item.list_id)}
+                  {item.isIncorrect && (
+                    <span className="is-incorrect">오답노트</span>
+                  )}
+                </p>
+              ))}
+              {/* {JSON.stringify(testingData.testLists)}
+              {JSON.stringify(testingData.data.listsData)} */}
+            </div>
+          </div>
+
+          <div className="testing-guage flex justify-center items-center">
             <GaugeComponent data={testingData.data.chosenOptionData} />
           </div>
         </div>

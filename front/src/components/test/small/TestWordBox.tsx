@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 
 // custom
 import { useQueue } from "../../../QueueContext";
-import { staticData } from "../../../staticData";
 
 // icons
 import { FaPlus, FaWikipediaW } from "react-icons/fa";
