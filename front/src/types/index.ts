@@ -53,6 +53,7 @@ export interface TestingData {
 export interface ModeState {
   isSign: boolean;
   isLoading: boolean;
+  isBlockLoading: boolean;
   isAlert: boolean;
   isFetching: boolean;
   isMobile: boolean;

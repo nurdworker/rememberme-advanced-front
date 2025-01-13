@@ -15,6 +15,8 @@ import "./Testing.scss";
 
 import TestWordBox from "./small/TestWordBox";
 
+import ConfirmAlertModal from "../../components/small/ConfirmAlertModal";
+
 const GaugeComponent = ({ data }: { data: (string | null)[] }) => {
   const totalItems = data.length;
   const filledItems = data.filter((item) => item !== null).length;
@@ -40,6 +42,10 @@ const Testing: React.FC = () => {
   const [isMeanShowActive, setIsMeanShowActive] = useState<boolean>(false);
   const [isEditModeActive, setIsEditModeActive] = useState<boolean>(false);
   const [isAnswerShowActive, setIsAnswerShowActive] = useState<boolean>(false);
+
+  const [isExitConfirmAlert, setIsExitConfirmAlert] = useState<boolean>(false);
+  const [isSubmitConfirmAlert, setIsSubmitConfirmAlert] =
+    useState<boolean>(false);
 
   const { showAlert } = useFuncs();
 
@@ -112,6 +118,24 @@ const Testing: React.FC = () => {
     });
     console.log(newIndex);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        changeIndex("prev");
+      } else if (event.key === "ArrowRight") {
+        changeIndex("next");
+      }
+    };
+
+    // 키보드 이벤트 리스너 등록
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 리스너 정리
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [changeIndex]);
 
   const toggleMemoShowActive = (): void => {
     setIsMemoShowActive((prev: boolean): boolean => !prev);
@@ -186,8 +210,40 @@ const Testing: React.FC = () => {
   };
 
   const handleExitTest = (): void => {
-    localStorage.removeItem("testingData");
-    navigate("/");
+    setIsExitConfirmAlert(true);
+    setIsSubmitConfirmAlert(false);
+  };
+
+  const handleSubmitTest = (): void => {
+    const chosenOptionData = testingData.data.chosenOptionData;
+
+    if (chosenOptionData) {
+      const firstNullIndex = chosenOptionData.findIndex(
+        (item) => item === null
+      );
+      if (firstNullIndex !== -1) {
+        console.log(`First null value found at index: ${firstNullIndex}`);
+
+        const updatedTestingData = {
+          ...testingData,
+          data: {
+            ...testingData.data,
+            nowIndex: firstNullIndex,
+          },
+        };
+
+        setTestingData(updatedTestingData);
+
+        localStorage.setItem("testingData", JSON.stringify(updatedTestingData));
+
+        return;
+      }
+    }
+
+    setIsSubmitConfirmAlert(true);
+    setIsExitConfirmAlert(false);
+
+    navigate(`/tests?mode=result&test_id=${testingData.test_id}`);
   };
 
   const testtest = () => {
@@ -215,8 +271,45 @@ const Testing: React.FC = () => {
     return list ? list.name : "Unknown List";
   };
 
+  const handleExitConfirm = (): void => {
+    console.log("Exit confirmed");
+    setIsExitConfirmAlert(false);
+    localStorage.removeItem("testingData");
+    navigate("/");
+  };
+
+  const handleExitCancel = (): void => {
+    console.log("Exit cancelled");
+    setIsExitConfirmAlert(false);
+  };
+
+  // Submit Confirm 관련 함수들
+  const handleSubmitConfirm = (): void => {
+    console.log("Submit confirmed");
+    setIsSubmitConfirmAlert(false);
+  };
+
+  const handleSubmitCancel = (): void => {
+    console.log("Submit cancelled");
+    setIsSubmitConfirmAlert(false);
+  };
   return (
     <div className="container_testing">
+      {isExitConfirmAlert && (
+        <ConfirmAlertModal
+          message="Are you sure you want to exit? /n If you leave, the exam data cannot be recovered."
+          onConfirm={handleExitConfirm}
+          onCancel={handleExitCancel}
+        />
+      )}
+
+      {isSubmitConfirmAlert && (
+        <ConfirmAlertModal
+          message="Are you sure you want to submit?"
+          onConfirm={handleSubmitConfirm}
+          onCancel={handleSubmitCancel}
+        />
+      )}
       {/* <p>{JSON.stringify(testingData)}</p> */}
       {/* <p>{testingData?.data?.nowIndex}</p> */}
       {/* <pre>{JSON.stringify(currentWord, null, 2)}</pre>
@@ -278,9 +371,9 @@ const Testing: React.FC = () => {
               2
             )}
           </pre> */}
-          <pre>
+          {/* <pre>
             {JSON.stringify(testingData.data.chosenOptionData, null, 2)}
-          </pre>
+          </pre> */}
           {testingData.data.optionData[testingData.data.nowIndex]?.map(
             (option: string, index: number) => (
               <div
@@ -346,7 +439,7 @@ const Testing: React.FC = () => {
           <div className="btn small" onClick={handleExitTest}>
             <IoMdExit className="icon" />
           </div>
-          <div className="btn small">
+          <div className="btn small" onClick={handleSubmitTest}>
             <GiConfirmed className="icon" />
           </div>
 
@@ -360,19 +453,6 @@ const Testing: React.FC = () => {
           </div>
         </div>
       )}
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
-      <h1>테스트</h1>
     </div>
   );
 };

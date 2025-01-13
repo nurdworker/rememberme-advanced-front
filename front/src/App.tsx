@@ -39,6 +39,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Auth from "./components/Auth";
 import AlertModal from "./components/small/AlertModal";
 import Loading from "./components/small/Loading";
+import BlockLoading from "./components/small/BlockLoading";
 
 // public types
 import { UserInfo, ReduxState } from "./types/index";
@@ -53,8 +54,13 @@ const AppContent = () => {
   //mode state
   const isSign = useSelector((state: ReduxState) => state.mode.isSign);
   const isLoading = useSelector((state: ReduxState) => state.mode.isLoading);
+  const isBlockLoading = useSelector(
+    (state: ReduxState) => state.mode.isBlockLoading
+  );
   const isAlert = useSelector((state: ReduxState) => state.mode.isAlert);
+
   const alertMessage = useSelector((state: ReduxState) => state.alertMessage);
+
   // const testWords = useSelector((state: ReduxState) => state.data.words);
   // const testLists = useSelector((state: ReduxState) => state.data.lists);
 
@@ -148,6 +154,7 @@ const AppContent = () => {
     <div className="App">
       <div className="container_app">
         {isLoading && <Loading isLoading={isLoading} />}
+        {isBlockLoading && <BlockLoading isBlockLoading={isBlockLoading} />}
 
         {isAlert && <AlertModal message={alertMessage} onClose={() => {}} />}
 

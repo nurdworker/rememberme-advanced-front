@@ -113,18 +113,28 @@ export const useFuncs = () => {
     },
 
     fetchWordsData: useCallback(
-      async (list_id: string | undefined): Promise<FetchDataReturn> => {
+      async (
+        list_id: string | undefined,
+        mode?: "block"
+      ): Promise<FetchDataReturn> => {
         if (isFetchingWordsProcessing.current) {
           console.log("fetching words is already running. return.");
           return { message: "processing" };
         }
         isFetchingWordsProcessing.current = true;
         console.log("Invoke fetching words!");
+        if (mode === "block") {
+          dispatch({
+            type: "SET_BLOCK_LOADING",
+            value: true,
+          });
+        } else {
+          dispatch({
+            type: "SET_LOADING",
+            value: true,
+          });
+        }
 
-        dispatch({
-          type: "SET_LOADING",
-          value: true,
-        });
         dispatch({
           type: "SET_FETCHING",
           value: true,
@@ -169,10 +179,18 @@ export const useFuncs = () => {
           );
           return { message: "error" };
         } finally {
-          dispatch({
-            type: "SET_LOADING",
-            value: false,
-          });
+          if (mode === "block") {
+            dispatch({
+              type: "SET_BLOCK_LOADING",
+              value: false,
+            });
+          } else {
+            dispatch({
+              type: "SET_LOADING",
+              value: false,
+            });
+          }
+
           dispatch({
             type: "SET_FETCHING",
             value: false,

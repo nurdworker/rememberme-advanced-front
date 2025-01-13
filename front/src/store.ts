@@ -8,10 +8,11 @@ type Action =
   | { type: "SET_USER_INFO"; value: UserInfo }
   | { type: "SET_SIGN"; value: boolean }
   | { type: "SET_LOADING"; value: boolean }
+  | { type: "SET_BLOCK_LOADING"; value: boolean }
   | { type: "SET_FETCHING"; value: boolean }
   | { type: "SET_FETCHED_LISTS_DATA"; value: boolean }
-  | { type: "SET_ALERT"; value: boolean }
   | { type: "SET_MOBILE"; value: boolean }
+  | { type: "SET_ALERT"; value: boolean }
   | { type: "SET_ALERT_MESSAGE"; message: string | null };
 
 // initial data
@@ -19,6 +20,7 @@ const initialState: ReduxState = {
   mode: {
     isSign: false,
     isLoading: false,
+    isBlockLoading: false,
     isAlert: false,
     isFetching: false,
     isMobile: false,
@@ -66,6 +68,14 @@ const appReducer = (state = initialState, action: Action) => {
           isLoading: action.value,
         },
       };
+    case "SET_BLOCK_LOADING":
+      return {
+        ...state,
+        mode: {
+          ...state.mode,
+          isBlockLoading: action.value,
+        },
+      };
     case "SET_FETCHED_LISTS_DATA":
       return {
         ...state,
@@ -98,11 +108,13 @@ const appReducer = (state = initialState, action: Action) => {
           isAlert: action.value,
         },
       };
+
     case "SET_ALERT_MESSAGE":
       return {
         ...state,
         alertMessage: action.message,
       };
+
     case "SET_MOBILE":
       return {
         ...state,

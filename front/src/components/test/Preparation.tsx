@@ -119,7 +119,10 @@ const Preparation: React.FC = () => {
       );
 
       if (!isListWordsInStore) {
-        const fetchingResult: FetchDataReturn = await fetchWordsData(list_id);
+        const fetchingResult: FetchDataReturn = await fetchWordsData(
+          list_id,
+          "block"
+        );
         if (fetchingResult?.message === "success") {
           console.log("fetching words is succeed");
           return;

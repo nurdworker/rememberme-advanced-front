@@ -15,12 +15,7 @@
       .testing-question-number {
         font-size: 2rem;
         font-weight: bold;
-        background: linear-gradient(
-          to right,
-          #ef4444,
-          #f59e0b,
-          #ec4899
-        ); // 그라데이션
+        background: linear-gradient(to right, #ef4444, #f59e0b, #ec4899);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: left;
@@ -32,15 +27,15 @@
       .testing-lists-info {
         width: 80%;
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        justify-content: center;
         animation: tracking-in-expand 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
           both;
 
         .list-name {
           font-size: 1rem;
           font-weight: bold;
-          color: #333; /* 어두운 회색으로 기본 텍스트 색상 */
+          color: #333;
           margin: 10px;
           padding: 8px 15px;
           border-radius: 8px;
