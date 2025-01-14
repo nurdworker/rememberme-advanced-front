@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Preparation from "./test/Preparation";
 import Testing from "./test/Testing";
 
+import { staticData } from "../staticData";
+
 const Tests: React.FC = () => {
   // default
   const location = useLocation();
@@ -22,6 +24,15 @@ const Tests: React.FC = () => {
       search: searchParams.toString(),
     });
   };
+
+  const testtest = (): void => {
+    console.log(
+      staticData.checkFormFuncs.checkTestingDataForm(
+        JSON.parse(localStorage.getItem("testingData"))
+      )
+    );
+  };
+
   return (
     <div className="container_tests">
       {mode === "preparation" && (
@@ -36,6 +47,13 @@ const Tests: React.FC = () => {
               className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 active:bg-blue-700"
             >
               Let's take an exam!
+            </button>
+
+            <button
+              onClick={testtest}
+              className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 active:bg-blue-700"
+            >
+              폼체크 함수
             </button>
           </div>
 

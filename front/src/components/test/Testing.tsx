@@ -10,6 +10,7 @@ import { Word, List, TestingData } from "../../types/index";
 
 // custom
 import { useFuncs } from "../../funcs";
+import { staticData } from "../../staticData";
 
 // icons
 import { FaEdit } from "react-icons/fa";
@@ -118,7 +119,12 @@ const Testing: React.FC = () => {
       localStorage.getItem("testingData") || "null"
     );
 
-    if (!data) {
+    const isValidForm: boolean =
+      staticData.checkFormFuncs.checkTestingDataForm(data);
+
+    if (!data || !isValidForm) {
+      showAlert("something wrong..");
+      localStorage.removeItem("testingData");
       navigate("/tests");
     } else {
       setTestingData(data);
