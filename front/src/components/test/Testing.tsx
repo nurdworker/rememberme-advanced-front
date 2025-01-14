@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./Testing.scss";
 
 // types
-import { Word, List, TestingData } from "../../types/index";
+import { Word, List, TestingData, TestResult } from "../../types/index";
 
 // custom
 import { useFuncs } from "../../funcs";
@@ -123,7 +123,6 @@ const Testing: React.FC = () => {
       staticData.checkFormFuncs.checkTestingDataForm(data);
 
     if (!data || !isValidForm) {
-      showAlert("something wrong..");
       localStorage.removeItem("testingData");
       navigate("/tests");
     } else {
@@ -188,6 +187,7 @@ const Testing: React.FC = () => {
     }, 500);
   };
 
+  // funcs
   const updateEditedWordFromProps = (word: Word): void => {
     setTestingData((prevData) => {
       if (!prevData) return prevData;
@@ -208,6 +208,75 @@ const Testing: React.FC = () => {
 
       return updatedData;
     });
+  };
+
+  const getTestingResult = (testingData: TestingData): TestResult => {
+    const test_id = testingData.test_id;
+
+    const testList = testingData.testLists.map((test) => {
+      const listData = testingData.data.listsData.find(
+        (list) => list._id === test.list_id
+      );
+      return {
+        ...test,
+        name: listData ? listData.name : "",
+      };
+    });
+
+    const testMode = testingData.testMode;
+
+    const wordsCount = testingData.data.wordsData.length;
+
+    const wrongQuestions = testingData.data.wordsData
+      .map((wordData, index) => {
+        const correctAnswer = testingData.data.correctOptionData[index];
+        const chosenAnswer = testingData.data.chosenOptionData[index];
+
+        if (correctAnswer !== chosenAnswer) {
+          const listData = testList.find(
+            (test) => test.list_id === wordData.list_id
+          );
+
+          return {
+            word: wordData.word,
+            mean: wordData.mean,
+            chosenOption: chosenAnswer,
+            listName: listData ? listData.name : "",
+            wordData,
+          };
+        }
+        return null;
+      })
+      .filter((item) => item !== null);
+
+    return {
+      test_id,
+      testList,
+      testMode,
+      wordsCount,
+      wrongQuestions,
+    };
+  };
+
+  const updateTestResults = (): void => {
+    const testResults = JSON.parse(localStorage.getItem("testResults") || "[]");
+
+    const newTestResult = getTestingResult(testingData);
+
+    const isTestExist = testResults.some(
+      (result: TestResult) => result.test_id === newTestResult.test_id
+    );
+
+    if (!isTestExist) {
+      const updatedTestResults = [...testResults, newTestResult];
+
+      if (updatedTestResults.length > 20) {
+        updatedTestResults.sort((a, b) => a.test_id - b.test_id);
+        updatedTestResults.splice(0, updatedTestResults.length - 20);
+      }
+
+      localStorage.setItem("testResults", JSON.stringify(updatedTestResults));
+    }
   };
 
   // child component handlers
@@ -250,6 +319,9 @@ const Testing: React.FC = () => {
     setIsSubmitConfirmAlert(true);
     setIsExitConfirmAlert(false);
 
+    //여기에 testResults
+    updateTestResults();
+    localStorage.removeItem("testingData");
     navigate(`/tests?mode=result&test_id=${testingData.test_id}`);
   };
 

@@ -1,9 +1,10 @@
-// import { useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // components
 import Preparation from "./test/Preparation";
 import Testing from "./test/Testing";
+import Result from "./test/Result";
 
 import { staticData } from "../staticData";
 
@@ -11,10 +12,24 @@ const Tests: React.FC = () => {
   // default
   const location = useLocation();
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
+  const searchParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location]
+  );
 
   const mode: string | null = searchParams.get("mode");
   console.log(mode);
+
+  useEffect(() => {
+    const testingData = localStorage.getItem("testingData");
+    if (testingData && mode !== "testing") {
+      searchParams.set("mode", "testing");
+      navigate({
+        pathname: location.pathname,
+        search: searchParams.toString(),
+      });
+    }
+  }, [location, navigate, searchParams, mode]);
 
   const startTest = (): void => {
     searchParams.set("mode", "preparation");
@@ -26,11 +41,8 @@ const Tests: React.FC = () => {
   };
 
   const testtest = (): void => {
-    console.log(
-      staticData.checkFormFuncs.checkTestingDataForm(
-        JSON.parse(localStorage.getItem("testingData"))
-      )
-    );
+    const testId = "1736865787024"; // test_id 값
+    navigate(`/tests?mode=result&test_id=${testId}`);
   };
 
   return (
@@ -39,6 +51,7 @@ const Tests: React.FC = () => {
         <div className="screen">{<Preparation />}</div>
       )}
       {mode === "testing" && <div className="screen">{<Testing />}</div>}
+      {mode === "result" && <div className="screen">{<Result />}</div>}
       {!mode && (
         <div className="screen">
           <div className="start-test-box flex justify-center items-center mt-8">
@@ -53,7 +66,7 @@ const Tests: React.FC = () => {
               onClick={testtest}
               className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 active:bg-blue-700"
             >
-              폼체크 함수
+              결과창
             </button>
           </div>
 

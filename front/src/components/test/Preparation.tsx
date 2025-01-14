@@ -37,7 +37,9 @@ const Preparation: React.FC = () => {
     { list_id: string; isIncorrect: boolean }[]
   >([]);
   const [refreshedLists, setRefreshedLists] = useState<string[]>([]);
-  const [selectedMode, setSelectedMode] = useState<string>("wordToMean");
+  const [selectedMode, setSelectedMode] = useState<"wordToMean" | "meanToWord">(
+    "wordToMean"
+  );
 
   useEffect(() => {
     if (directListId && isDirectListIncorrect) {
@@ -151,12 +153,9 @@ const Preparation: React.FC = () => {
     await checkWordsAndfetchWords(list_id);
   };
 
-  const handleModeSelection = (mode: string) => {
+  const handleModeSelection = (mode: "wordToMean" | "meanToWord") => {
     setSelectedMode(mode);
   };
-  const [test1, setTest1] = useState(null);
-  const [test2, setTest2] = useState(null);
-  const [test3, setTest3] = useState(null);
 
   const generateOptionData = (
     testMode: string,
@@ -218,12 +217,13 @@ const Preparation: React.FC = () => {
     wordsData: Word[],
     testMode: string
   ): Promise<string[]> => {
-    return wordsData.map((word) => {
+    return wordsData.map((word: Word) => {
       if (testMode === "wordToMean") {
         return word.mean;
       } else if (testMode === "meanToWord") {
         return word.word;
       }
+      return "";
     });
   };
 

@@ -38,7 +38,7 @@ export interface Word {
 export interface TestingData {
   test_id: string;
   testLists: { list_id: string; isIncorrect: boolean }[];
-  testMode: string;
+  testMode: "wordToMean" | "meanToWord";
   data: {
     nowIndex: number;
     listsData: List[];
@@ -47,6 +47,20 @@ export interface TestingData {
     correctOptionData: string[];
     chosenOptionData: (string | null)[];
   };
+}
+
+export interface TestResult {
+  test_id: string;
+  testList: { list_id: string; isIncorrect: boolean; name: string }[];
+  testMode: "wordToMean" | "meanToWord";
+  wordsCount: number;
+  wrongQuestions: {
+    word: string;
+    mean: string;
+    chosenOption: string;
+    listName: string;
+    wordData: Word;
+  }[];
 }
 
 // redux

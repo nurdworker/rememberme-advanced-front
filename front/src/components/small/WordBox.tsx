@@ -279,7 +279,6 @@ const WordBox: React.FC<WordProps> = ({
                 onChange={(e) => setNewMemo(e.target.value)}
                 onBlur={handleSaveMemo}
                 onKeyDown={handleKeyDown}
-                autoFocus
                 className="memo-input"
                 placeholder="Add a memo..."
               />
