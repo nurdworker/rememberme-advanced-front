@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import "./ConfirmAlertModal.scss";
 
 // type
-import { ReduxState } from "../../types/index";
 interface ConfirmAlertModalProps {
   message: string | null;
   onConfirm: () => void;
@@ -22,10 +21,12 @@ const ConfirmAlertModal: React.FC<ConfirmAlertModalProps> = ({
   const [isFadingOut, setIsFadingOut] = useState<boolean>(false);
   const [isHidden, setIsHidden] = useState<boolean>(false);
 
+  // useEffects
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
+  // button handlers
   const handleConfirmClick = () => {
     console.log("Confirm button clicked");
     onConfirm();
@@ -64,7 +65,7 @@ const ConfirmAlertModal: React.FC<ConfirmAlertModalProps> = ({
               </p>
             ))
           ) : (
-            <p>Nomessage1234123513613467124727471247</p>
+            <p>empty</p>
           )}
         </div>
         <div className="confirm-alert-btns">

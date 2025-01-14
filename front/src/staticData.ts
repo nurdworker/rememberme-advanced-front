@@ -1,4 +1,5 @@
-// type
+// types
+import { Word, List } from "./types/index";
 class Node<T> {
   value: T;
   next: Node<T> | null = null;
@@ -19,12 +20,12 @@ export const staticData = {
     indo: "https://raw.githubusercontent.com/lipis/flag-icons/e119b66129af6dd849754ccf25dfbf81d4a306d5/flags/1x1/id.svg",
   },
   endpoint: process.env.REACT_APP_API_GATEWAY_ENDPOINT as string,
-  updateListInArray: (lists: Array<any>, updatedList: any) => {
+  updateListInArray: (lists: List[], updatedList: List) => {
     return lists.map((list) =>
       list._id === updatedList._id ? updatedList : list
     );
   },
-  updatedWordsArray: (words: Array<any>, updatedWord: any) => {
+  updatedWordsArray: (words: Word[], updatedWord: Word) => {
     return words.map((word) =>
       word._id === updatedWord._id ? updatedWord : word
     );

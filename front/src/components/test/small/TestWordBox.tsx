@@ -1,7 +1,10 @@
+// public modules
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 // custom
 import { useQueue } from "../../../QueueContext";
+import { staticData } from "../../../staticData";
 
 // icons
 import { FaPlus, FaWikipediaW } from "react-icons/fa";
@@ -13,7 +16,7 @@ import { RiSpeakAiFill } from "react-icons/ri";
 import "./TestWordBox.scss";
 
 // types
-import { Word } from "../../../types/index";
+import { Word, ReduxState } from "../../../types/index";
 interface WordProps extends Word {
   isWordShowActive: boolean;
   isMeanShowActive: boolean;
@@ -46,17 +49,20 @@ const WordBox: React.FC<WordProps> = ({
   updateEditedWordFromProps,
 }) => {
   // default
-  // const dispatch = useDispatch();
-
-  // mode state
+  const dispatch = useDispatch();
 
   // public data
+  const words: Word[] = useSelector(
+    (state: ReduxState) => state.data.words || []
+  );
   const { editedWordsQueue } = useQueue();
 
   // component state
   const [fontSize, setFontSize] = useState<number>(30);
-  const [isEditingMemo, setIsEditingMemo] = useState<boolean>(false);
   const [newMemo, setNewMemo] = useState<string>(memo);
+
+  // component mode
+  const [isEditingMemo, setIsEditingMemo] = useState<boolean>(false);
 
   // js identifier
   const wordData: Word = {
@@ -76,17 +82,18 @@ const WordBox: React.FC<WordProps> = ({
   const handleSaveMemo = (): void => {
     if (wordData.memo !== newMemo) {
       const updatedMemoWord = { ...wordData, memo: newMemo } as Word;
-
-      // dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
+      const updatedWordsArray = staticData.updatedWordsArray(
+        words,
+        updatedMemoWord
+      );
+      dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
       updateEditedWordFromProps(updatedMemoWord);
-
       editedWordsQueue.enqueue(updatedMemoWord);
       setIsEditingMemo(false);
-      // 수정된 경우에만 newMemo 초기화
       setNewMemo("");
     } else {
       console.log("not changed memo data");
-      setIsEditingMemo(false); // 메모가 수정되지 않으면 바로 종료
+      setIsEditingMemo(false);
     }
   };
 
@@ -98,8 +105,8 @@ const WordBox: React.FC<WordProps> = ({
         ? wordData.incorrect_lists
         : [...wordData.incorrect_lists, incorrectList_id],
     };
-
-    // dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
+    const updatedWordsArray = staticData.updatedWordsArray(words, updatedWord);
+    dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
     updateEditedWordFromProps(updatedWord);
     editedWordsQueue.enqueue(updatedWord);
   };
@@ -112,12 +119,13 @@ const WordBox: React.FC<WordProps> = ({
         (listId: string) => listId !== incorrectList_id
       ),
     };
-
-    // dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
+    const updatedWordsArray = staticData.updatedWordsArray(words, updatedWord);
+    dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
     updateEditedWordFromProps(updatedWord);
     editedWordsQueue.enqueue(updatedWord);
   };
 
+  // handlers dictionary
   const handleNaverDictionary = (word: string): void => {
     const encodedWord = encodeURIComponent(word);
     let url: string | undefined;
@@ -150,9 +158,9 @@ const WordBox: React.FC<WordProps> = ({
     }
   };
 
+  // handler audio
   const handlePlayAudio = (word: string, language: string = "en"): void => {
     const utterance = new SpeechSynthesisUtterance(word);
-
     if (language === "en") {
       utterance.lang = "en-US";
     } else if (language === "jp") {
@@ -162,7 +170,6 @@ const WordBox: React.FC<WordProps> = ({
     } else {
       utterance.lang = "en-US";
     }
-
     window.speechSynthesis.speak(utterance);
   };
 
@@ -182,7 +189,6 @@ const WordBox: React.FC<WordProps> = ({
   }, [isEditModeActive]);
 
   useEffect(() => {
-    console.log("음");
     setNewMemo("");
   }, [wordData._id]);
 
@@ -235,8 +241,6 @@ const WordBox: React.FC<WordProps> = ({
             {new Date(creation_date).toLocaleDateString()}
           </p>
         </div>
-        {/* <p>{"is_incorrect : " + String(is_incorrect)}</p>
-        <p>{"incorrectList_id : " + String(incorrectList_id)}</p> */}
       </div>
 
       <div className="side-content">

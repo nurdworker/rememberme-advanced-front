@@ -50,7 +50,7 @@ export const useFuncs = () => {
           return filteredWord;
         });
 
-        console.log("Filtered Words (압축된 데이터):", filteredWordsArr);
+        // console.log("Filtered Words (압축된 데이터):", filteredWordsArr);
 
         const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/words?request=editWords`,
