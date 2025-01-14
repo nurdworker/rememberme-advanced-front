@@ -128,10 +128,8 @@ const Testing: React.FC = () => {
       }
     };
 
-    // 키보드 이벤트 리스너 등록
     window.addEventListener("keydown", handleKeyDown);
 
-    // 컴포넌트 언마운트 시 리스너 정리
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -223,6 +221,11 @@ const Testing: React.FC = () => {
       );
       if (firstNullIndex !== -1) {
         console.log(`First null value found at index: ${firstNullIndex}`);
+        showAlert(
+          `You have not selected an option for question number ${
+            firstNullIndex + 1
+          }!`
+        );
 
         const updatedTestingData = {
           ...testingData,
@@ -244,16 +247,6 @@ const Testing: React.FC = () => {
     setIsExitConfirmAlert(false);
 
     navigate(`/tests?mode=result&test_id=${testingData.test_id}`);
-  };
-
-  const testtest = () => {
-    setTestingData((prevData) => ({
-      ...prevData,
-      data: {
-        ...prevData.data,
-        nowIndex: 3,
-      },
-    }));
   };
 
   const joinToList = (list_id: string, isIncorrect: boolean): void => {
