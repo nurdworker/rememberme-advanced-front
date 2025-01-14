@@ -1,7 +1,14 @@
+// public modules
 import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
+
+// custom
+import { useFuncs } from "../funcs";
+import { useQueue } from "../QueueContext";
+import { auth } from "../auth";
+import { staticData } from "../staticData";
 
 // css
 import "./Words.scss";
@@ -9,10 +16,6 @@ import "./Words.scss";
 // components
 import WordBox from "./small/WordBox";
 import CreateWordModal from "./small/CreateWordModal";
-
-// custom
-import { useFuncs } from "../funcs";
-import { useQueue } from "../QueueContext";
 
 // icons
 import { FaPlus, FaEdit } from "react-icons/fa";
@@ -22,10 +25,6 @@ import { MdNoteAdd } from "react-icons/md";
 import { SlNotebook } from "react-icons/sl";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { SiTestcafe } from "react-icons/si";
-
-//custom hook funcs
-import { auth } from "../auth";
-import { staticData } from "../staticData";
 
 //types
 import {
@@ -38,46 +37,43 @@ import {
 import { AxiosResponse } from "axios";
 
 const Words = () => {
-  const list_id: string | undefined = useParams<{ id: string }>().id;
+  // default
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { editedWordsQueue } = useQueue();
-
-  const { fetchWordsData, fetchListsData, showAlert } = useFuncs();
-  const isFetching: boolean = useSelector(
-    (state: ReduxState) => state.mode.isFetching
-  );
-
-  const isFetchedListsData: boolean = useSelector(
-    (state: ReduxState) => state.mode.isFetchedListsData
-  );
   const location = useLocation();
 
+  // public data
+  const { fetchWordsData, fetchListsData, showAlert } = useFuncs();
   const words: Word[] = useSelector(
     (state: ReduxState) => state.data.words || []
   );
   const lists: List[] = useSelector((state: ReduxState) => state.data.lists);
+
+  // public mode
+  const isFetching: boolean = useSelector(
+    (state: ReduxState) => state.mode.isFetching
+  );
+  const isFetchedListsData: boolean = useSelector(
+    (state: ReduxState) => state.mode.isFetchedListsData
+  );
+
+  // component state
   const [list, setList] = useState<List | null>(null);
+  const [selectedWordIds, setSelectedWordIds] = useState<string[]>([]);
+  const list_id: string | undefined = useParams<{ id: string }>().id;
+
+  // component mode
   const [isCreateWordModalOpen, setIsCreateWordModalOpen] =
     useState<boolean>(false);
   const [isSideBtnsActive, setIsSideBtnsActive] = useState<boolean>(false);
   const [isWordShowActive, setIsWordShowActive] = useState<boolean>(true);
   const [isMeanShowActive, setIsMeanShowActive] = useState<boolean>(true);
   const [isMemoShowActive, setIsMemoShowActive] = useState<boolean>(false);
-
-  const [selectedWordIds, setSelectedWordIds] = useState<string[]>([]);
-
   const [isEditModeActive, setIsEditModeActive] = useState<boolean>(false);
-
   const [isIncorrectList, setIsIncorrectList] = useState<boolean>(false);
 
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const isIncorrectListParam: string | null =
-      queryParams.get("isIncorrectList");
-    setIsIncorrectList(isIncorrectListParam === "true");
-  }, [location.search]);
-
+  // funcs for useEffect
   const checkWordsAndfetchWords = useCallback(async (): Promise<void> => {
     const isListWordsInStore: boolean = words.some(
       (word: Word) => word.list_id === list_id
@@ -118,6 +114,14 @@ const Words = () => {
     }
   }, [lists, fetchListsData, navigate, isFetchedListsData]);
 
+  // useEffects
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const isIncorrectListParam: string | null =
+      queryParams.get("isIncorrectList");
+    setIsIncorrectList(isIncorrectListParam === "true");
+  }, [location.search]);
+
   useEffect(() => {
     const asyncHandler = async (): Promise<void> => {
       await checkListsAndfetchLists();
@@ -135,6 +139,7 @@ const Words = () => {
     }
   }, [lists, list_id]);
 
+  // toggle funcs
   const toggleCreateWordModal = (): void => {
     setIsCreateWordModalOpen(!isCreateWordModalOpen);
   };
@@ -167,6 +172,11 @@ const Words = () => {
     setIsMemoShowActive((prev: boolean): boolean => !prev);
   };
 
+  const toggleEditMode = (): void => {
+    setIsEditModeActive((prev: boolean): boolean => !prev);
+  };
+
+  // click handler
   const handleWordDoubleClick = (wordId: string): void => {
     console.log("double!");
     setSelectedWordIds((prevSelectedWordIds: string[]): string[] => {
@@ -178,10 +188,7 @@ const Words = () => {
     });
   };
 
-  const toggleEditMode = (): void => {
-    setIsEditModeActive((prev: boolean): boolean => !prev);
-  };
-
+  // handlers
   const shuffleWords = (): void => {
     const copiedArray: Word[] = [...words];
     for (let i = copiedArray.length - 1; i > 0; i--) {

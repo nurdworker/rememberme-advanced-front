@@ -64,7 +64,6 @@
   }
   .question-contents {
     width: 90%;
-    border: 1px solid green;
   }
   .question-options {
     display: flex;
@@ -74,9 +73,9 @@
     padding: 30px;
     width: 100%;
     .option-card {
-      background-color: #f9fbff; /* 부드러운 파스텔 블루 */
-      border: 1px solid #d0e2ff; /* 연한 블루 테두리 */
-      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05); /* 가벼운 그림자 */
+      background-color: #f9fbff;
+      border: 1px solid #d0e2ff;
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
       border-radius: 8px;
       padding: 12px 20px;
       margin: 10px;
@@ -115,7 +114,6 @@
     }
   }
   .question-btns {
-    border: 1px solid blue;
     width: 100%;
     z-index: 10;
     position: fixed;
@@ -201,42 +199,42 @@
     }
 
     .btn {
-      width: 60px; // 버튼의 크기
-      height: 60px; // 버튼의 크기
-      background-color: #fff; // 버튼 중앙 색상 (하얀색)
-      border: 3px solid transparent; // 기본 테두리는 투명으로 설정
-      border-radius: 50%; // 원형 버튼
-      background-clip: padding-box; // 배경을 테두리 바깥으로 자름
+      width: 60px;
+      height: 60px;
+      background-color: #fff;
+      border: 3px solid transparent;
+      border-radius: 50%;
+      background-clip: padding-box;
       display: flex;
-      justify-content: center; // 아이콘을 버튼의 가운데에 배치
+      justify-content: center;
       align-items: center;
-      padding: 10px; // 버튼 내부 여백 설정
+      padding: 10px;
       position: relative;
-      transition: all 0.3s ease; // 부드러운 애니메이션
-      cursor: pointer; // 버튼 클릭 시 포인터 커서
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 
       &::before {
-        content: ""; // 가상 요소 생성
+        content: "";
         position: absolute;
         top: -5px;
         left: -5px;
         right: -5px;
         bottom: -5px;
-        border-radius: 50%; // 원형 모양
+        border-radius: 50%;
         background-image: linear-gradient(
           45deg,
           rgba(0, 123, 255, 1),
           rgba(255, 0, 123, 1)
-        ); // 테두리 그라데이션
-        z-index: -1; // 버튼 내부보다 뒤로 보내기
+        );
+        z-index: -1;
       }
 
       .icon {
         width: 30px;
         height: 30px;
-        font-size: 30px; /* 아이콘 크기 */
-        color: #d500f9; /* 티파니 블루 색상 */
+        font-size: 30px;
+        color: #d500f9;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -246,7 +244,7 @@
       &:hover {
         width: 65px;
         height: 65px;
-        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); // hover 시 그림자 효과
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
         .icon {
           width: 35px;
           height: 35px;
@@ -254,7 +252,7 @@
       }
 
       &:active {
-        transform: scale(0.95); // 클릭 시 버튼 크기 약간 줄어듦
+        transform: scale(0.95);
       }
 
       .Active {

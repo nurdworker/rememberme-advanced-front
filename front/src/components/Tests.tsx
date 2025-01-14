@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // components
@@ -6,15 +6,10 @@ import Preparation from "./test/Preparation";
 import Testing from "./test/Testing";
 
 const Tests: React.FC = () => {
+  // default
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("hello tests");
   const searchParams = new URLSearchParams(location.search);
-
-  const [isPreparation, setIsPreparation] = useState<boolean>(false);
-  const [isTesting, setIsTesting] = useState<boolean>(false);
-  const [isTestsBoard, setIsTestsBoard] = useState<boolean>(false);
-  const [isResult, setIsResult] = useState<boolean>(false);
 
   const mode: string | null = searchParams.get("mode");
   console.log(mode);

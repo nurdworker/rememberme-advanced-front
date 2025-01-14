@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from "react";
+// public modules
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+
+// css
+import "./Testing.scss";
+
 // types
 import { Word, List, TestingData } from "../../types/index";
 
+// custom
 import { useFuncs } from "../../funcs";
 
+// icons
 import { FaEdit } from "react-icons/fa";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { GiConfirmed } from "react-icons/gi";
 import { IoMdExit } from "react-icons/io";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
-import "./Testing.scss";
-
+// components
 import TestWordBox from "./small/TestWordBox";
-
 import ConfirmAlertModal from "../../components/small/ConfirmAlertModal";
-
 const GaugeComponent = ({ data }: { data: (string | null)[] }) => {
   const totalItems = data.length;
   const filledItems = data.filter((item) => item !== null).length;
@@ -35,27 +39,80 @@ const GaugeComponent = ({ data }: { data: (string | null)[] }) => {
 };
 
 const Testing: React.FC = () => {
+  // default
   const navigate = useNavigate();
+  const { showAlert } = useFuncs();
+
+  //component state
   const [testingData, setTestingData] = useState<TestingData>(null);
   const [isMemoShowActive, setIsMemoShowActive] = useState<boolean>(false);
   const [isWordShowActive, setIsWordShowActive] = useState<boolean>(false);
   const [isMeanShowActive, setIsMeanShowActive] = useState<boolean>(false);
   const [isEditModeActive, setIsEditModeActive] = useState<boolean>(false);
   const [isAnswerShowActive, setIsAnswerShowActive] = useState<boolean>(false);
-
   const [isExitConfirmAlert, setIsExitConfirmAlert] = useState<boolean>(false);
   const [isSubmitConfirmAlert, setIsSubmitConfirmAlert] =
     useState<boolean>(false);
 
-  const { showAlert } = useFuncs();
-
+  //component data
   const currentWord: Word =
     testingData?.data?.wordsData[testingData?.data?.nowIndex];
   const currentList: List = testingData?.data?.listsData?.find(
     (list) => list._id === currentWord?.list_id
   );
   const language: string = currentList?.language;
+  const listTitle = (list_id: string): string => {
+    const list = testingData?.data?.listsData.find(
+      (item) => item._id === list_id
+    );
+    return list ? list.name : "Unknown List";
+  };
 
+  //setting funcs
+  const changeIndex = useCallback(
+    (direction: "prev" | "next"): void => {
+      if (!testingData) return;
+
+      const maxIndex = testingData?.data.chosenOptionData.length - 1;
+      let newIndex = testingData?.data.nowIndex;
+
+      if (direction === "prev") {
+        if (newIndex > 0) {
+          newIndex -= 1;
+        } else {
+          showAlert("Cannot decrease further. \nAlready at the first item.");
+          return;
+        }
+      } else if (direction === "next") {
+        if (newIndex < maxIndex) {
+          newIndex += 1;
+        } else {
+          showAlert("Cannot increase further.\nAlready at the last item.");
+          return;
+        }
+      }
+
+      setTestingData((prevData) => {
+        if (!prevData) return prevData;
+
+        const updatedData = {
+          ...prevData,
+          data: {
+            ...prevData.data,
+            nowIndex: newIndex,
+          },
+        };
+
+        localStorage.setItem("testingData", JSON.stringify(updatedData));
+
+        return updatedData;
+      });
+      console.log("move");
+    },
+    [testingData, setTestingData, showAlert]
+  );
+
+  // useEffects
   useEffect(() => {
     const data: TestingData = JSON.parse(
       localStorage.getItem("testingData") || "null"
@@ -65,7 +122,6 @@ const Testing: React.FC = () => {
       navigate("/tests");
     } else {
       setTestingData(data);
-
       if (data.testMode === "wordToMean") {
         setIsWordShowActive(true);
         setIsMeanShowActive(false);
@@ -78,46 +134,6 @@ const Testing: React.FC = () => {
       }
     }
   }, [navigate, setIsMeanShowActive, setIsWordShowActive]);
-
-  const changeIndex = (direction: "prev" | "next") => {
-    if (!testingData) return;
-
-    const maxIndex = testingData?.data.chosenOptionData.length - 1;
-    let newIndex = testingData?.data.nowIndex;
-
-    if (direction === "prev") {
-      if (newIndex > 0) {
-        newIndex -= 1;
-      } else {
-        showAlert("Cannot decrease further. \nAlready at the first item.");
-        return;
-      }
-    } else if (direction === "next") {
-      if (newIndex < maxIndex) {
-        newIndex += 1;
-      } else {
-        showAlert("Cannot increase further.\nAlready at the last item.");
-        return;
-      }
-    }
-
-    setTestingData((prevData) => {
-      if (!prevData) return prevData;
-
-      const updatedData = {
-        ...prevData,
-        data: {
-          ...prevData.data,
-          nowIndex: newIndex,
-        },
-      };
-
-      localStorage.setItem("testingData", JSON.stringify(updatedData));
-
-      return updatedData;
-    });
-    console.log(newIndex);
-  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -135,6 +151,7 @@ const Testing: React.FC = () => {
     };
   }, [changeIndex]);
 
+  //toggle mode Funcs
   const toggleMemoShowActive = (): void => {
     setIsMemoShowActive((prev: boolean): boolean => !prev);
   };
@@ -187,26 +204,7 @@ const Testing: React.FC = () => {
     });
   };
 
-  const handleSelectOption = (selectedOption: string): void => {
-    setTestingData((prevData) => {
-      const updatedData = {
-        ...prevData,
-        data: {
-          ...prevData.data,
-          chosenOptionData: prevData.data.chosenOptionData.map((item, index) =>
-            index === prevData.data.nowIndex ? selectedOption : item
-          ),
-        },
-      };
-
-      localStorage.setItem("testingData", JSON.stringify(updatedData));
-
-      return updatedData;
-    });
-
-    console.log(selectedOption);
-  };
-
+  // child component handlers
   const handleExitTest = (): void => {
     setIsExitConfirmAlert(true);
     setIsSubmitConfirmAlert(false);
@@ -249,19 +247,33 @@ const Testing: React.FC = () => {
     navigate(`/tests?mode=result&test_id=${testingData.test_id}`);
   };
 
+  //handlers
+  const handleSelectOption = (selectedOption: string): void => {
+    setTestingData((prevData) => {
+      const updatedData = {
+        ...prevData,
+        data: {
+          ...prevData.data,
+          chosenOptionData: prevData.data.chosenOptionData.map((item, index) =>
+            index === prevData.data.nowIndex ? selectedOption : item
+          ),
+        },
+      };
+
+      localStorage.setItem("testingData", JSON.stringify(updatedData));
+
+      return updatedData;
+    });
+
+    console.log(selectedOption);
+  };
+
   const joinToList = (list_id: string, isIncorrect: boolean): void => {
     if (isIncorrect) {
       navigate(`/lists/${list_id}?isIncorrectList=true`);
     } else {
       navigate(`/lists/${list_id}`);
     }
-  };
-
-  const listTitle = (list_id: string): string => {
-    const list = testingData?.data?.listsData.find(
-      (item) => item._id === list_id
-    );
-    return list ? list.name : "Unknown List";
   };
 
   const handleExitConfirm = (): void => {
@@ -276,7 +288,6 @@ const Testing: React.FC = () => {
     setIsExitConfirmAlert(false);
   };
 
-  // Submit Confirm 관련 함수들
   const handleSubmitConfirm = (): void => {
     console.log("Submit confirmed");
     setIsSubmitConfirmAlert(false);
@@ -303,11 +314,7 @@ const Testing: React.FC = () => {
           onCancel={handleSubmitCancel}
         />
       )}
-      {/* <p>{JSON.stringify(testingData)}</p> */}
-      {/* <p>{testingData?.data?.nowIndex}</p> */}
-      {/* <pre>{JSON.stringify(currentWord, null, 2)}</pre>
-      <pre>{JSON.stringify(currentList, null, 2)}</pre> */}
-      {/* <button onClick={testtest}>123123123</button> */}
+
       {testingData && testingData.data && (
         <div className="question-header">
           <div className="question-main-info">
@@ -329,8 +336,6 @@ const Testing: React.FC = () => {
                   )}
                 </p>
               ))}
-              {/* {JSON.stringify(testingData.testLists)}
-              {JSON.stringify(testingData.data.listsData)} */}
             </div>
           </div>
 
@@ -357,16 +362,6 @@ const Testing: React.FC = () => {
       )}
       {testingData && testingData.data && (
         <div className="question-options">
-          {/* <pre>
-            {JSON.stringify(
-              testingData.data.optionData[testingData.data.nowIndex],
-              null,
-              2
-            )}
-          </pre> */}
-          {/* <pre>
-            {JSON.stringify(testingData.data.chosenOptionData, null, 2)}
-          </pre> */}
           {testingData.data.optionData[testingData.data.nowIndex]?.map(
             (option: string, index: number) => (
               <div

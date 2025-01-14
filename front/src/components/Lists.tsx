@@ -61,20 +61,14 @@ const Lists = () => {
   useEffect(() => {
     const asyncHandler = async (): Promise<void> => {
       if (!lists || lists.length === 0) {
-        // 어레이가 빈값일경우
         const fetchingResult: FetchDataReturn = await fetchListsData();
         if (fetchingResult?.message === "success") {
-          // 2. 새로운 사용자일경우
           console.log("fetching is succeed");
-
           return;
         } else if (fetchingResult?.message === "processing") {
-          // 2. 이미 fetching중일경우
-
           console.log("fetching is processing");
           return;
         } else {
-          // 1. fetch가 안되었을경우
           console.log("fetching is on error");
           navigate("/");
         }
@@ -182,32 +176,26 @@ const Lists = () => {
     }
 
     if (destination.droppableId === "wordLists") {
-      // is_deleted가 false인 항목만 필터링
       const activeLists: List[] = lists.filter(
         (list: List) => !list.is_deleted
       );
 
-      // activeLists에서만 재정렬
       const reorderedLists: List[] = [...activeLists];
 
-      // 삭제된 항목을 빼고 순서 변경
-      const [removedItem]: List[] = reorderedLists.splice(source.index, 1); // 삭제
-      reorderedLists.splice(destination.index, 0, removedItem); // 삽입
+      const [removedItem]: List[] = reorderedLists.splice(source.index, 1);
+      reorderedLists.splice(destination.index, 0, removedItem);
 
       console.log(
         "Reordered Lists Names:",
         reorderedLists.map((list: List) => list.name)
       );
 
-      // 로컬스토리지에 업데이트된 순서 저장
       const reorderedIds: string[] = reorderedLists.map(
         (list: List) => list._id
       );
 
-      // 로컬스토리지에 순서 저장
       localStorage.setItem("reorderedLists", JSON.stringify(reorderedIds));
 
-      // 디스패치하여 상태 업데이트
       dispatch({ type: "SET_DATA_LISTS", value: reorderedLists });
     }
   };
