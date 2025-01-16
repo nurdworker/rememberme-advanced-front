@@ -55,15 +55,23 @@ const Result: React.FC = () => {
         localStorage.getItem("testResults") || "[]"
       );
 
-      const testResult: TestResult | undefined = testResults.find(
-        (result: TestResult) => result.test_id === test_id
-      );
+      const validTestResult = testResults
+        .map((testResult) => {
+          const isValid =
+            staticData.checkFormFuncs.checkTestResultForm(testResult);
+          if (!isValid) {
+            navigate("/tests");
+            return null;
+          }
+          return testResult;
+        })
+        .find((result) => result?.test_id === test_id);
 
-      if (testResult) {
-        return testResult;
-      } else {
-        navigate("/tests");
+      if (validTestResult) {
+        return validTestResult;
       }
+
+      navigate("/tests");
     }, [test_id, navigate]);
 
   const extractWordsData = useCallback(async () => {

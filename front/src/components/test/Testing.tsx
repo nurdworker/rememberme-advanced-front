@@ -263,19 +263,24 @@ const Testing: React.FC = () => {
 
     const newTestResult = getTestResult(testingData);
 
-    const isTestExist = testResults.some(
-      (result: TestResult) => result.test_id === newTestResult.test_id
-    );
+    if (staticData.checkFormFuncs.checkTestResultForm(newTestResult)) {
+      const isTestExist = testResults.some(
+        (result: TestResult) => result.test_id === newTestResult.test_id
+      );
 
-    if (!isTestExist) {
-      const updatedTestResults = [...testResults, newTestResult];
+      if (!isTestExist) {
+        const updatedTestResults = [...testResults, newTestResult];
 
-      if (updatedTestResults.length > 20) {
-        updatedTestResults.sort((a, b) => a.test_id - b.test_id);
-        updatedTestResults.splice(0, updatedTestResults.length - 20);
+        if (updatedTestResults.length > 20) {
+          updatedTestResults.sort((a, b) => a.test_id - b.test_id);
+          updatedTestResults.splice(0, updatedTestResults.length - 20);
+        }
+
+        localStorage.setItem("testResults", JSON.stringify(updatedTestResults));
       }
-
-      localStorage.setItem("testResults", JSON.stringify(updatedTestResults));
+    } else {
+      showAlert("something wrong..");
+      navigate(`/tests`);
     }
   };
 
@@ -319,7 +324,6 @@ const Testing: React.FC = () => {
     setIsSubmitConfirmAlert(true);
     setIsExitConfirmAlert(false);
 
-    //여기에 testResults
     updateTestResults();
     localStorage.removeItem("testingData");
     navigate(`/tests?mode=result&test_id=${testingData.test_id}`);
@@ -346,7 +350,7 @@ const Testing: React.FC = () => {
     console.log(selectedOption);
   };
 
-  const joinToList = (list_id: string, isIncorrect: boolean): void => {
+  const handleJoinToList = (list_id: string, isIncorrect: boolean): void => {
     if (isIncorrect) {
       navigate(`/lists/${list_id}?isIncorrectList=true`);
     } else {
@@ -405,7 +409,7 @@ const Testing: React.FC = () => {
                   className="list-name"
                   key={item.list_id}
                   onClick={() => {
-                    joinToList(item.list_id, item.isIncorrect);
+                    handleJoinToList(item.list_id, item.isIncorrect);
                   }}
                 >
                   {listTitle(item.list_id)}

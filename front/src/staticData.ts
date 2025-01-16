@@ -1,5 +1,5 @@
 // types
-import { Word, List, TestingData } from "./types/index";
+import { Word, List, TestingData, TestResult } from "./types/index";
 class Node<T> {
   value: T;
   next: Node<T> | null = null;
@@ -175,6 +175,77 @@ export const staticData = {
         return false;
       }
 
+      return true;
+    },
+    checkTestResultForm: (testResult: TestResult): boolean => {
+      // 1. test_id는 유닉스 타임 형식의 숫자여야 함
+      if (
+        isNaN(Number(testResult.test_id)) ||
+        String(Number(testResult.test_id)) !== testResult.test_id
+      ) {
+        console.log("test_id 검증 실패");
+        return false;
+      }
+
+      // 2. testList 프로퍼티 검증
+      if (!Array.isArray(testResult.testList)) {
+        console.log("testList 검증 실패");
+        return false;
+      }
+      if (
+        !testResult.testList.every(
+          (list) =>
+            typeof list.list_id === "string" &&
+            typeof list.isIncorrect === "boolean" &&
+            typeof list.name === "string"
+        )
+      ) {
+        console.log("testList 요소 검증 실패");
+        return false;
+      }
+
+      // 3. testMode는 'wordToMean' 또는 'meanToWord'여야 함
+      if (!["wordToMean", "meanToWord"].includes(testResult.testMode)) {
+        console.log("testMode 검증 실패");
+        return false;
+      }
+
+      // 4. wrongQuestions는 배열이어야 함
+      if (!Array.isArray(testResult.wrongQuestions)) {
+        console.log("wrongQuestions 검증 실패");
+        return false;
+      }
+
+      // 5. wrongQuestions 요소가 있을 때 필수 프로퍼티 검증
+      if (testResult.wrongQuestions.length > 0) {
+        for (const question of testResult.wrongQuestions) {
+          if (
+            typeof question.word !== "string" ||
+            typeof question.mean !== "string" ||
+            typeof question.chosenOption !== "string" ||
+            typeof question.listName !== "string"
+          ) {
+            console.log("wrongQuestions 요소 검증 실패");
+            return false;
+          }
+
+          // 6. listName은 testList의 name이어야 함
+          const validListNames = testResult.testList.map((list) => list.name);
+          if (!validListNames.includes(question.listName)) {
+            console.log("listName 검증 실패");
+            return false;
+          }
+
+          // 7. wordData는 Word 타입이어야 함
+          const wordData = question.wordData;
+          if (!staticData.checkFormFuncs.checkWordForm(wordData)) {
+            console.log("wordData 검증 실패");
+            return false;
+          }
+        }
+      }
+
+      // 모든 검증을 통과하면 true 반환
       return true;
     },
   },
