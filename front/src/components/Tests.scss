@@ -21,7 +21,6 @@
 
       .test-time {
         display: flex;
-        justify-content: center;
         align-items: center;
         font-size: 1rem;
         font-weight: bold;
@@ -32,7 +31,7 @@
         font-style: italic;
         animation: tracking-in-expand 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
           both;
-        width: 50%;
+        width: 45%;
       }
       .test-score {
         display: flex;
@@ -44,7 +43,7 @@
         color: transparent;
         background-clip: text;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        width: 20%;
+        width: 25%;
       }
 
       .fail {
@@ -71,9 +70,9 @@
         text-shadow: 0 1px 3px rgba(255, 255, 255, 0.2);
       }
       .lists-info {
-        font-size: 0.6em;
         width: 30%;
         .list-name {
+          font-size: 0.6em;
           .is-incorrect {
             font-size: 0.5em;
             color: red;
