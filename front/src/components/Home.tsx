@@ -70,7 +70,17 @@ const Home = () => {
 
   return (
     <div className={`container_home ${isMobile ? "mobile" : "desktop"}`}>
-      {!isSign && <GoogleLoginButton onClick={handleSign} />}
+      {!isSign && (
+        <div>
+          <GoogleLoginButton onClick={handleSign} />
+
+          <img
+            src="/rbm-introduction.webp"
+            alt="Introduction"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </div>
+      )}
       {!isFetching && isSign && (
         <div className="contents-home">
           <div className="title-box">
