@@ -45,6 +45,11 @@ const CreateWordModal: React.FC<CreateWordModalProps> = ({
     }
   }, [isOpen]);
 
+  // some funcs..
+  const isDuplicatedWord = (list_id: string, word: string): boolean => {
+    return words.some((item) => item.list_id === list_id && item.word === word);
+  };
+
   // Handlers
   const handleAddWord = async () => {
     if (word.trim() && meaning.trim()) {
@@ -57,6 +62,11 @@ const CreateWordModal: React.FC<CreateWordModalProps> = ({
         !checkWordDataLength(word, "word") ||
         !checkWordDataLength(meaning, "mean")
       ) {
+        return;
+      }
+
+      if (isDuplicatedWord(list_id, word)) {
+        showAlert("there is duplicated word..");
         return;
       }
       try {
