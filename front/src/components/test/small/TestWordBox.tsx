@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 // custom
 import { useQueue } from "../../../QueueContext";
 import { staticData } from "../../../staticData";
+import { useFuncs } from "../../../funcs";
 
 // icons
 import { FaPlus, FaWikipediaW } from "react-icons/fa";
@@ -56,6 +57,7 @@ const WordBox: React.FC<WordProps> = ({
     (state: ReduxState) => state.data.words || []
   );
   const { editedWordsQueue } = useQueue();
+  const { checkWordDataLength } = useFuncs();
 
   // component state
   const [fontSize, setFontSize] = useState<number>(30);
@@ -80,6 +82,9 @@ const WordBox: React.FC<WordProps> = ({
 
   // edit handlers
   const handleSaveMemo = (): void => {
+    if (!checkWordDataLength(newMemo, "memo")) {
+      return;
+    }
     if (wordData.memo !== newMemo) {
       const updatedMemoWord = { ...wordData, memo: newMemo } as Word;
       const updatedWordsArray = staticData.updatedWordsArray(

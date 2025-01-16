@@ -28,7 +28,7 @@ const CreateWordModal: React.FC<CreateWordModalProps> = ({
   const dispatch = useDispatch();
 
   // custom hook funcs
-  const { showAlert } = useFuncs();
+  const { showAlert, checkWordDataLength } = useFuncs();
 
   // public data
   const words: Word[] = useSelector((state: ReduxState) => state?.data.words);
@@ -53,6 +53,12 @@ const CreateWordModal: React.FC<CreateWordModalProps> = ({
         meaning: meaning,
         list_id,
       };
+      if (
+        !checkWordDataLength(word, "word") ||
+        !checkWordDataLength(meaning, "mean")
+      ) {
+        return;
+      }
       try {
         dispatch({ type: "SET_LOADING", value: true });
 

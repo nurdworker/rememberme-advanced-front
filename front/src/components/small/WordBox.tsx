@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 // custom
 import { useQueue } from "../../QueueContext";
 import { staticData } from "../../staticData";
+import { useFuncs } from "../../funcs";
 
 // icons
 import { FaPlus, FaWikipediaW } from "react-icons/fa";
@@ -49,6 +50,7 @@ const WordBox: React.FC<WordProps> = ({
 }) => {
   // default
   const dispatch = useDispatch();
+  const { checkWordDataLength } = useFuncs();
 
   // mode state
   // const isMobile = useSelector((state: any) => state.mode.isMobile);
@@ -70,7 +72,10 @@ const WordBox: React.FC<WordProps> = ({
   const wordData: Word = words.find((word: Word) => word._id === _id) as Word;
 
   // edit handlers
-  const handleSaveWord = () => {
+  const handleSaveWord = (): void => {
+    if (!checkWordDataLength(newWord, "word")) {
+      return;
+    }
     if (wordData?.word !== newWord) {
       const updatedWord = { ...wordData, word: newWord } as Word;
       const updatedWordsArray: Word[] = staticData.updatedWordsArray(
@@ -87,6 +92,9 @@ const WordBox: React.FC<WordProps> = ({
   };
 
   const handleSaveMean = (): void => {
+    if (!checkWordDataLength(newMean, "mean")) {
+      return;
+    }
     if (wordData?.mean !== newMean) {
       const updatedMeanWord = { ...wordData, mean: newMean } as Word;
       const updatedWordsArray: Word[] = staticData.updatedWordsArray(
@@ -103,6 +111,9 @@ const WordBox: React.FC<WordProps> = ({
   };
 
   const handleSaveMemo = (): void => {
+    if (!checkWordDataLength(newMemo, "memo")) {
+      return;
+    }
     if (wordData.memo !== newMemo) {
       const updatedMemoWord = { ...wordData, memo: newMemo } as Word;
       const updatedWordsArray: Word[] = staticData.updatedWordsArray(

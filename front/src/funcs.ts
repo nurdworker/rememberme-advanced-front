@@ -111,7 +111,6 @@ export const useFuncs = () => {
       dispatch({ type: "SET_DATA", value: null });
       localStorage.clear();
     },
-
     fetchWordsData: useCallback(
       async (
         list_id: string | undefined,
@@ -203,7 +202,6 @@ export const useFuncs = () => {
       },
       [dispatch, existingWords]
     ),
-
     fetchListsData: useCallback(async (): Promise<FetchDataReturn> => {
       if (isFetchingListsProcessing.current) {
         console.log("fetching lists is already running. return.");
@@ -282,7 +280,42 @@ export const useFuncs = () => {
         });
       }
     }, [dispatch]),
-
+    checkWordDataLength: (
+      data: string,
+      type: "word" | "mean" | "memo"
+    ): boolean => {
+      if (type === "word" || type === "mean") {
+        if (data.length <= 0) {
+          showAlert("The length must be greater than 0.");
+          return false;
+        }
+        if (data.length > 20) {
+          showAlert("The length must not exceed 20 characters.");
+          return false;
+        }
+        return true;
+      }
+      if (type === "memo") {
+        if (data.length > 50) {
+          showAlert("The length of the memo must not exceed 50 characters.");
+          return false;
+        }
+        return true;
+      }
+      showAlert("Invalid type provided.");
+      return false;
+    },
+    checkListDataLength: (name: string): boolean => {
+      if (name.length <= 0) {
+        showAlert("The length of the name must be greater than 0.");
+        return false;
+      }
+      if (name.length > 20) {
+        showAlert("The length of the name must not exceed 20 characters.");
+        return false;
+      }
+      return true;
+    },
     showAlert,
   };
 };

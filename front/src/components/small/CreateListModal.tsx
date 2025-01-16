@@ -29,7 +29,7 @@ const CreateListModal: React.FC<CreateListModalProps> = ({
   const lists = useSelector((state: ReduxState) => state?.data.lists);
 
   //custom hook funcs
-  const { showAlert } = useFuncs();
+  const { showAlert, checkListDataLength } = useFuncs();
 
   //component state
   const [language, setLanguage] = useState<string>("en");
@@ -55,6 +55,9 @@ const CreateListModal: React.FC<CreateListModalProps> = ({
           type: "SET_LOADING",
           value: true,
         });
+        if (!checkListDataLength(listName)) {
+          return;
+        }
         const response: AxiosResponse = await auth.api.post(
           `${staticData.endpoint}/list?request=putList`,
           {
