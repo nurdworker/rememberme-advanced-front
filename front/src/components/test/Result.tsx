@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -7,32 +6,32 @@ import { useSelector, useDispatch } from "react-redux";
 import "./Result.scss";
 
 // custom
-import { useFuncs } from "../../funcs";
 import { staticData } from "../../staticData";
+import { useQueue } from "../../QueueContext";
 
 // types
-import {
-  ReduxState,
-  Word,
-  List,
-  TestingData,
-  TestResult,
-} from "../../types/index";
+import { ReduxState, Word, List, TestResult } from "../../types/index";
 
 //icons
-import { FaPlus, FaWikipediaW } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { GrSubtractCircle } from "react-icons/gr";
+import { MdDisabledByDefault } from "react-icons/md";
 
 const Result: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const test_id: string | null = searchParams.get("test_id");
+  const dispatch = useDispatch();
+
+  const { editedWordsQueue } = useQueue();
 
   const words: Word[] = useSelector(
     (state: ReduxState) => state.data.words || []
   );
-  const dispatch = useDispatch();
+  const lists: List[] = useSelector(
+    (state: ReduxState) => state.data.lists || []
+  );
 
   const [testResult, setTestResult] = useState<TestResult | null>(null);
 
@@ -64,19 +63,15 @@ const Result: React.FC = () => {
 
   const extractWordsData = useCallback(async () => {
     const testResult = await checkedValidTestResults();
-    if (!testResult) return; // testResult가 없으면 함수 종료
+    if (!testResult) return;
 
-    // testResult를 기반으로 wrongQuestions 배열을 업데이트
     const updatedWrongQuestions = testResult.wrongQuestions.map((question) => {
-      // 리덕스 words에서 동일한 _id를 가진 객체 찾기
       const matchingWord = words.find(
         (word) => word._id === question.wordData._id
       );
 
-      // matchingWord가 없으면 원래 객체 반환
       if (!matchingWord) return question;
 
-      // 모든 프로퍼티를 비교하여 다르면 wordData 교체
       const isDifferent = Object.keys(matchingWord).some(
         (key) =>
           matchingWord[key as keyof typeof matchingWord] !==
@@ -84,21 +79,17 @@ const Result: React.FC = () => {
       );
 
       if (isDifferent) {
-        // wordData를 리덕스 words 객체로 교체
         return {
           ...question,
           wordData: matchingWord,
         };
       }
 
-      // 동일하다면 변경하지 않음
       return question;
     });
 
-    // 이전 testResult와 같은 경우 상태를 업데이트하지 않음
     setTestResult((prevTestResult) => {
       if (prevTestResult && prevTestResult.test_id === testResult.test_id) {
-        // 동일한 testResult일 경우 상태 업데이트 방지
         return prevTestResult;
       }
 
@@ -117,8 +108,6 @@ const Result: React.FC = () => {
     asyncHandler();
   }, [extractWordsData]);
 
-  console.log("hello test result");
-
   const scoreClass = (score) => {
     const [numerator, denominator] = score.split("/").map(Number);
 
@@ -132,6 +121,106 @@ const Result: React.FC = () => {
       return "success";
     } else {
       return "perfect";
+    }
+  };
+
+  const linkedIncorrectListIdOfWordList = (word: Word): string | false => {
+    const { list_id } = word;
+
+    const foundList = lists.find((list) => list._id === list_id);
+
+    if (foundList && foundList.linked_incorrect_word_lists?.[0]) {
+      return foundList.linked_incorrect_word_lists[0];
+    }
+
+    return false;
+  };
+
+  const updatedTestResult = (updatedWord: Word): TestResult => {
+    const updatedResult: TestResult = { ...testResult };
+
+    updatedResult.wrongQuestions = updatedResult.wrongQuestions.map(
+      (wrongQuestion) => {
+        if (wrongQuestion.wordData._id === updatedWord._id) {
+          return {
+            ...wrongQuestion,
+            wordData: updatedWord,
+          };
+        }
+        return wrongQuestion;
+      }
+    );
+
+    return updatedResult;
+  };
+
+  const updatedTestResults = (testResult: TestResult): TestResult[] => {
+    const testResults = localStorage.getItem("testResults");
+
+    const parsedResults: TestResult[] = testResults
+      ? JSON.parse(testResults)
+      : [];
+
+    const updatedResults = parsedResults.map((result) =>
+      result.test_id === testResult.test_id ? testResult : result
+    );
+
+    return updatedResults;
+  };
+
+  const handleAddWordInIncorrectList = (word: Word): void => {
+    const incorrectList_id = linkedIncorrectListIdOfWordList(word);
+
+    if (typeof incorrectList_id === "string") {
+      const updatedWord: Word = {
+        ...word,
+        is_incorrect: true,
+        incorrect_lists: word.incorrect_lists.includes(incorrectList_id)
+          ? word.incorrect_lists
+          : [...word.incorrect_lists, incorrectList_id],
+      };
+      const updatedWordsArray = staticData.updatedWordsArray(
+        words,
+        updatedWord
+      );
+      dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
+      const newTestResult: TestResult = updatedTestResult(updatedWord);
+      setTestResult(newTestResult);
+      const newTestResults = JSON.stringify(updatedTestResults(newTestResult));
+      localStorage.setItem("testResults", newTestResults);
+      editedWordsQueue.enqueue(updatedWord);
+    } else {
+      return;
+    }
+  };
+
+  const goToList = (list_id) => {
+    navigate(`/lists/${list_id}`);
+  };
+
+  const handleSubtractWordInFromcorrectList = (word: Word): void => {
+    const incorrectList_id = linkedIncorrectListIdOfWordList(word);
+
+    if (typeof incorrectList_id === "string") {
+      const updatedWord: Word = {
+        ...word,
+        is_incorrect: false,
+        incorrect_lists: word.incorrect_lists.filter(
+          (listId: string) => listId !== incorrectList_id
+        ),
+      };
+      const updatedWordsArray = staticData.updatedWordsArray(
+        words,
+        updatedWord
+      );
+      dispatch({ type: "SET_DATA_WORDS", value: updatedWordsArray });
+      const newTestResult: TestResult = updatedTestResult(updatedWord);
+      setTestResult(newTestResult);
+      const newTestResults = JSON.stringify(updatedTestResults(newTestResult));
+      localStorage.setItem("testResults", newTestResults);
+      editedWordsQueue.enqueue(updatedWord);
+    } else {
+      return;
     }
   };
 
@@ -152,7 +241,13 @@ const Result: React.FC = () => {
 
         <div className="test-lists">
           {testResult?.testList.map((list, index) => (
-            <div key={index} className="list-name">
+            <div
+              key={index}
+              className="list-name"
+              onClick={() => {
+                goToList(list.list_id);
+              }}
+            >
               <p>
                 {list.name}{" "}
                 {list.isIncorrect && (
@@ -169,15 +264,36 @@ const Result: React.FC = () => {
           <div className="result-word-card" key={index}>
             <p className="origin-word">{question.wordData.word}</p>
             <p className="origin-mean">{question.mean}</p>
-            <p className="chosen-option">{question.chosenOption}</p>
+            <p className="chosen-option">
+              <MdDisabledByDefault />
+              {question.chosenOption}
+            </p>
             <p className="list-name">{question.listName}</p>
             <p className="incorrect-btn">
-              <button className="side-btn add-incorrect">
-                <FaPlus className="icon" />
-              </button>
-              <button className="side-btn substract-incorrect">
-                <GrSubtractCircle className="icon" />
-              </button>
+              {linkedIncorrectListIdOfWordList(question.wordData) && (
+                <>
+                  {question.wordData.is_incorrect === false && (
+                    <button
+                      className="side-btn add-incorrect"
+                      onClick={() => {
+                        handleAddWordInIncorrectList(question.wordData);
+                      }}
+                    >
+                      <FaPlus className="icon" />
+                    </button>
+                  )}
+                  {question.wordData.is_incorrect === true && (
+                    <button
+                      className="side-btn substract-incorrect"
+                      onClick={() => {
+                        handleSubtractWordInFromcorrectList(question.wordData);
+                      }}
+                    >
+                      <GrSubtractCircle className="icon" />
+                    </button>
+                  )}
+                </>
+              )}
             </p>
           </div>
         ))}

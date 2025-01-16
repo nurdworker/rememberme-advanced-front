@@ -2,8 +2,84 @@
   display: flex;
   width: 100%;
   .screen {
-    position: absolute;
     width: 100%;
-    top: 0;
+  }
+
+  .history {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    gap: 10px;
+    .history-card {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-radius: 5px;
+      background: linear-gradient(135deg, #f9f9f9, #ffffff);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+      .test-time {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1rem;
+        font-weight: bold;
+        background: linear-gradient(to right, #ef4444, #f59e0b, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: left;
+        font-style: italic;
+        animation: tracking-in-expand 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+          both;
+        width: 40%;
+      }
+      .test-score {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 1em;
+        font-weight: 700;
+        color: transparent;
+        background-clip: text;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        width: 20%;
+      }
+
+      .fail {
+        background: linear-gradient(90deg, #f28b82, #fbbc04);
+        -webkit-background-clip: text;
+        text-shadow: 0 1px 3px rgba(255, 255, 255, 0.2);
+      }
+
+      .notice {
+        background: linear-gradient(90deg, #fbbc04, #fff475);
+        -webkit-background-clip: text;
+        text-shadow: 0 1px 3px rgba(255, 255, 255, 0.2);
+      }
+
+      .success {
+        background: linear-gradient(90deg, #34a853, #81c995);
+        -webkit-background-clip: text;
+        text-shadow: 0 1px 3px rgba(255, 255, 255, 0.2);
+      }
+
+      .perfect {
+        background: linear-gradient(90deg, #4285f4, #8ab4f8);
+        -webkit-background-clip: text;
+        text-shadow: 0 1px 3px rgba(255, 255, 255, 0.2);
+      }
+      .lists-info {
+        font-size: 0.8em;
+        width: 40%;
+        .list-name {
+          .is-incorrect {
+            font-size: 0.6em;
+            color: red;
+          }
+        }
+      }
+    }
   }
 }

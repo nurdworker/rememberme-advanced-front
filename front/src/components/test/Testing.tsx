@@ -210,7 +210,7 @@ const Testing: React.FC = () => {
     });
   };
 
-  const getTestingResult = (testingData: TestingData): TestResult => {
+  const getTestResult = (testingData: TestingData): TestResult => {
     const test_id = testingData.test_id;
 
     const testList = testingData.testLists.map((test) => {
@@ -261,7 +261,7 @@ const Testing: React.FC = () => {
   const updateTestResults = (): void => {
     const testResults = JSON.parse(localStorage.getItem("testResults") || "[]");
 
-    const newTestResult = getTestingResult(testingData);
+    const newTestResult = getTestResult(testingData);
 
     const isTestExist = testResults.some(
       (result: TestResult) => result.test_id === newTestResult.test_id
