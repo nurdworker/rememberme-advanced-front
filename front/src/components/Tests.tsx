@@ -1,15 +1,19 @@
+// public modules
 import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
+// css
+import "./Tests.scss";
 
 // components
 import Preparation from "./test/Preparation";
 import Testing from "./test/Testing";
 import Result from "./test/Result";
 
-import "./Tests.scss";
-
+// custom
 import { staticData } from "../staticData";
 
+// types
 import { TestResult } from "../types/index";
 
 const Tests: React.FC = () => {
@@ -21,10 +25,13 @@ const Tests: React.FC = () => {
     [location]
   );
 
+  // params
   const mode: string | null = searchParams.get("mode");
 
+  //component state
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
+  // useEffect
   useEffect(() => {
     const testingData = localStorage.getItem("testingData");
     if (testingData && mode !== "testing") {
@@ -40,7 +47,8 @@ const Tests: React.FC = () => {
     }
   }, [location, navigate, searchParams, mode]);
 
-  const startTest = (): void => {
+  //handlers
+  const handleStartTest = (): void => {
     searchParams.set("mode", "preparation");
 
     navigate({
@@ -49,14 +57,15 @@ const Tests: React.FC = () => {
     });
   };
 
+  const handleGoToResult = (test_id: string): void => {
+    navigate(`/tests?mode=result&test_id=${test_id}`);
+  };
+
+  // history funcs
   const calculateScore = (testResult: TestResult): string => {
     return `${testResult.wordsCount - testResult.wrongQuestions.length} / ${
       testResult.wordsCount
     }`;
-  };
-
-  const goToResult = (test_id: string): void => {
-    navigate(`/tests?mode=result&test_id=${test_id}`);
   };
 
   const scoreClass = (score) => {
@@ -86,7 +95,7 @@ const Tests: React.FC = () => {
         <div className="screen">
           <div className="start-test-box flex justify-center items-center mt-8">
             <button
-              onClick={startTest}
+              onClick={handleStartTest}
               className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold text-lg py-4 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-110 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 active:scale-95"
             >
               Let's take an exam!
@@ -101,7 +110,7 @@ const Tests: React.FC = () => {
                   key={index}
                   className="history-card"
                   onClick={() => {
-                    goToResult(testResult.test_id);
+                    handleGoToResult(testResult.test_id);
                   }}
                 >
                   <p className="test-time">

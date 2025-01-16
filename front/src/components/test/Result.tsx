@@ -1,3 +1,4 @@
+// public modules
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,14 +19,14 @@ import { GrSubtractCircle } from "react-icons/gr";
 import { MdDisabledByDefault } from "react-icons/md";
 
 const Result: React.FC = () => {
+  // default
   const location = useLocation();
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
-  const test_id: string | null = searchParams.get("test_id");
   const dispatch = useDispatch();
-
   const { editedWordsQueue } = useQueue();
+  const searchParams = new URLSearchParams(location.search);
 
+  // public data
   const words: Word[] = useSelector(
     (state: ReduxState) => state.data.words || []
   );
@@ -33,12 +34,16 @@ const Result: React.FC = () => {
     (state: ReduxState) => state.data.lists || []
   );
 
+  // params
+  const test_id: string | null = searchParams.get("test_id");
+
   const [testResult, setTestResult] = useState<TestResult | null>(null);
 
   const score: string = `${
     testResult?.wordsCount - testResult?.wrongQuestions.length
   } / ${testResult?.wordsCount}`;
 
+  // setting funcs
   const checkedValidTestResults =
     useCallback(async (): Promise<TestResult | void> => {
       if (!test_id) {
@@ -100,6 +105,7 @@ const Result: React.FC = () => {
     });
   }, [words, checkedValidTestResults]);
 
+  // useEffect
   useEffect(() => {
     console.log("test useEffect");
     const asyncHandler = async () => {
@@ -108,6 +114,7 @@ const Result: React.FC = () => {
     asyncHandler();
   }, [extractWordsData]);
 
+  // etc
   const scoreClass = (score) => {
     const [numerator, denominator] = score.split("/").map(Number);
 
@@ -124,6 +131,12 @@ const Result: React.FC = () => {
     }
   };
 
+  // handler
+  const handleGoToList = (list_id) => {
+    navigate(`/lists/${list_id}`);
+  };
+
+  // incorrect funcs
   const linkedIncorrectListIdOfWordList = (word: Word): string | false => {
     const { list_id } = word;
 
@@ -194,10 +207,6 @@ const Result: React.FC = () => {
     }
   };
 
-  const goToList = (list_id) => {
-    navigate(`/lists/${list_id}`);
-  };
-
   const handleSubtractWordInFromcorrectList = (word: Word): void => {
     const incorrectList_id = linkedIncorrectListIdOfWordList(word);
 
@@ -245,7 +254,7 @@ const Result: React.FC = () => {
               key={index}
               className="list-name"
               onClick={() => {
-                goToList(list.list_id);
+                handleGoToList(list.list_id);
               }}
             >
               <p>

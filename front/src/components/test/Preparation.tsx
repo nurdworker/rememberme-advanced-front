@@ -1,12 +1,11 @@
+// public modules
 import { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
+// css
 import "./Preparation.scss";
 
-import { staticData } from "../../staticData";
-// custom
-import { useFuncs } from "../../funcs";
 // types
 import {
   Word,
@@ -16,23 +15,33 @@ import {
   TestingData,
 } from "../../types/index";
 
+// custom
+import { useFuncs } from "../../funcs";
+import { staticData } from "../../staticData";
+
+// icons
 import { SlNotebook } from "react-icons/sl";
 import { IoMdRefresh } from "react-icons/io";
 import { FaNoteSticky } from "react-icons/fa6";
 
 const Preparation: React.FC = () => {
+  // default
   const location = useLocation();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
+
+  // params
   const directListId: string | null = searchParams.get("list_id");
   const isDirectListIncorrect: string | null = searchParams.get(
     "is_direct_list_incorrect"
   );
-  const navigate = useNavigate();
-  const { fetchWordsData, showAlert } = useFuncs();
 
+  // public data
+  const { fetchWordsData, showAlert } = useFuncs();
   const lists: List[] = useSelector((state: ReduxState) => state.data.lists);
   const words: Word[] = useSelector((state: ReduxState) => state.data.words);
 
+  //component state
   const [checkedLists, setCheckedLists] = useState<
     { list_id: string; isIncorrect: boolean }[]
   >([]);
@@ -40,7 +49,13 @@ const Preparation: React.FC = () => {
   const [selectedMode, setSelectedMode] = useState<"wordToMean" | "meanToWord">(
     "wordToMean"
   );
+  const filteredLists = checkedLists
+    .map(({ list_id }) => {
+      return lists.filter((list) => list._id === list_id);
+    })
+    .flat();
 
+  // useEffect
   useEffect(() => {
     if (directListId && isDirectListIncorrect) {
       const isIncorrect = isDirectListIncorrect === "true";
@@ -51,33 +66,8 @@ const Preparation: React.FC = () => {
       ]);
     }
   }, [directListId, isDirectListIncorrect]);
-  const handleButtonClick = (listId: string, isIncorrect: boolean) => {
-    setCheckedLists((prevCheckedLists) => {
-      const existingListIndex = prevCheckedLists.findIndex(
-        (item) => item.list_id === listId
-      );
 
-      if (existingListIndex !== -1) {
-        const existingList = prevCheckedLists[existingListIndex];
-
-        if (existingList.isIncorrect === isIncorrect) {
-          return prevCheckedLists.filter((item) => item.list_id !== listId);
-        }
-
-        const updatedList = {
-          ...existingList,
-          isIncorrect: !existingList.isIncorrect,
-        };
-
-        return prevCheckedLists.map((item, index) =>
-          index === existingListIndex ? updatedList : item
-        );
-      }
-
-      return [...prevCheckedLists, { list_id: listId, isIncorrect }];
-    });
-  };
-
+  // etc
   const flagImageUrl = (language: string): string => {
     if (language === "en") {
       return staticData.flag_imgs.en;
@@ -90,30 +80,12 @@ const Preparation: React.FC = () => {
     }
   };
 
-  const wordsCount = (list_id: string): number => {
-    return words.filter((word) => word.list_id === list_id).length;
-  };
-
-  const incorrectWordsCount = (list_id: string): number => {
-    return words.filter((word) => word.list_id === list_id && word.is_incorrect)
-      .length;
-  };
-
-  const totalWordsCount = (): number => {
-    return checkedLists.reduce((total, item) => {
-      if (item.isIncorrect) {
-        return total + incorrectWordsCount(item.list_id);
-      } else {
-        return total + wordsCount(item.list_id);
-      }
-    }, 0);
-  };
-
   const listTitle = (list_id: string): string => {
     const list: List = lists.find((list) => list._id === list_id);
     return list ? list.name : "";
   };
 
+  // setting funcs
   const checkWordsAndfetchWords = useCallback(
     async (list_id: string): Promise<void> => {
       const isListWordsInStore: boolean = words.some(
@@ -142,21 +114,31 @@ const Preparation: React.FC = () => {
     [words, navigate, fetchWordsData]
   );
 
-  const handleRefreshButtonClick = (list_id: string) => {
-    if (!refreshedLists.includes(list_id)) {
-      setRefreshedLists((prev) => [...prev, list_id]);
-      refreshWordsCount(list_id);
-    }
+  // count funcs
+  const wordsCount = (list_id: string): number => {
+    return words.filter((word) => word.list_id === list_id).length;
+  };
+
+  const incorrectWordsCount = (list_id: string): number => {
+    return words.filter((word) => word.list_id === list_id && word.is_incorrect)
+      .length;
+  };
+
+  const totalWordsCount = (): number => {
+    return checkedLists.reduce((total, item) => {
+      if (item.isIncorrect) {
+        return total + incorrectWordsCount(item.list_id);
+      } else {
+        return total + wordsCount(item.list_id);
+      }
+    }, 0);
   };
 
   const refreshWordsCount = async (list_id): Promise<void> => {
     await checkWordsAndfetchWords(list_id);
   };
 
-  const handleModeSelection = (mode: "wordToMean" | "meanToWord") => {
-    setSelectedMode(mode);
-  };
-
+  // option funcs
   const generateOptionData = (
     testMode: string,
     wordsData: Word[]
@@ -183,7 +165,6 @@ const Preparation: React.FC = () => {
   ): string[] => {
     const randomOptions = new Set([correctOption]);
 
-    // 나머지 틀린 보기들을 추가
     while (randomOptions.size < optionCount) {
       const randomIndex = Math.floor(Math.random() * allOptions.length);
       randomOptions.add(allOptions[randomIndex]);
@@ -192,6 +173,11 @@ const Preparation: React.FC = () => {
     return Array.from(randomOptions).sort(() => Math.random() - 0.5);
   };
 
+  const handleModeSelection = (mode: "wordToMean" | "meanToWord") => {
+    setSelectedMode(mode);
+  };
+
+  // making testData funcs
   const filterWordsByCheckedLists = async (): Promise<Word[]> => {
     const wordsData: Word[] = [];
 
@@ -243,11 +229,40 @@ const Preparation: React.FC = () => {
     return true;
   };
 
-  const filteredLists = checkedLists
-    .map(({ list_id }) => {
-      return lists.filter((list) => list._id === list_id);
-    })
-    .flat();
+  // handlers
+  const handleButtonClick = (listId: string, isIncorrect: boolean) => {
+    setCheckedLists((prevCheckedLists) => {
+      const existingListIndex = prevCheckedLists.findIndex(
+        (item) => item.list_id === listId
+      );
+
+      if (existingListIndex !== -1) {
+        const existingList = prevCheckedLists[existingListIndex];
+
+        if (existingList.isIncorrect === isIncorrect) {
+          return prevCheckedLists.filter((item) => item.list_id !== listId);
+        }
+
+        const updatedList = {
+          ...existingList,
+          isIncorrect: !existingList.isIncorrect,
+        };
+
+        return prevCheckedLists.map((item, index) =>
+          index === existingListIndex ? updatedList : item
+        );
+      }
+
+      return [...prevCheckedLists, { list_id: listId, isIncorrect }];
+    });
+  };
+
+  const handleRefreshButtonClick = (list_id: string) => {
+    if (!refreshedLists.includes(list_id)) {
+      setRefreshedLists((prev) => [...prev, list_id]);
+      refreshWordsCount(list_id);
+    }
+  };
 
   const handleStartTest = async (): Promise<void> => {
     if (await checkingTestPreparation()) {
@@ -265,10 +280,6 @@ const Preparation: React.FC = () => {
         correctOptionData.length
       ).fill(null);
 
-      // setTest1(wordsData);
-      // setTest2(optionData);
-      // setTest3(correctOptionData);
-
       const testingData: TestingData = {
         test_id: Date.now().toString(),
         testLists: [...checkedLists],
@@ -284,23 +295,13 @@ const Preparation: React.FC = () => {
       };
 
       localStorage.setItem("testingData", JSON.stringify(testingData));
-      showAlert("Starting the test. Good luck!");
+      showAlert("Starting the test. \n Good luck!");
       navigate("/tests?mode=testing");
     }
   };
 
   return (
     <div className="container-preparation">
-      {/* <p>{JSON.stringify(checkedLists)}</p> */}
-      {/* <p>{JSON.stringify(lists)}</p> */}
-      {/* <p>{JSON.stringify(words)}</p> */}
-      {/* <pre>{JSON.stringify(test1, null, 2)}</pre>
-      <p>끊어어</p>
-      <pre>{JSON.stringify(test2, null, 2)}</pre>
-      <p>끊어어</p>
-
-      <pre>{JSON.stringify(test3, null, 2)}</pre>
-      {selectedMode} */}
       <nav className="preparation-nav">
         <div className="preparation-contents">
           {checkedLists.length === 0 ? (
@@ -339,8 +340,6 @@ const Preparation: React.FC = () => {
         >
           From Mean to Word
         </button>
-
-        {/* 선택된 모드를 표시 */}
       </div>
       <div className="preparation-title">Select your word lists!</div>
       <div className="lists">
@@ -348,7 +347,6 @@ const Preparation: React.FC = () => {
           .filter((list: List) => !list.is_deleted)
           .map((list: List, index: number) => (
             <div className="list-row">
-              {/* --- */}
               <div
                 className={`list-card-body ${
                   checkedLists.some((item) => item.list_id === list._id)
