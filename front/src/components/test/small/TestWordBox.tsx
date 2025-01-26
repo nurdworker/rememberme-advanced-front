@@ -209,7 +209,7 @@ const WordBox: React.FC<WordProps> = ({
   return (
     <div className={`word-box ${isSelected ? "selected" : ""}`}>
       <div className="main-content">
-        <div className="main-box">
+        <div className="test-main-box">
           {isWordShowActive && (
             <h1 className="word" style={{ fontSize: `${fontSize}px` }}>
               {word}

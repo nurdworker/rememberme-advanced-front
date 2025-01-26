@@ -114,6 +114,14 @@ const AppContent = () => {
       });
   });
 
+  useEffect(() => {
+    console.log("라우터가 변경되었습니다!", location.pathname);
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      saveListsQueueDataAtDb();
+      saveWordsQueueDataAtDb();
+    }
+  }, [location, saveListsQueueDataAtDb, saveWordsQueueDataAtDb]); // location이 변경될 때마다 실행
+
   // useEffects
   useEffect(() => {
     const handleResize = () => {

@@ -11,7 +11,7 @@ import Testing from "./test/Testing";
 import Result from "./test/Result";
 
 // custom
-import { staticData } from "../staticData";
+// import { staticData } from "../staticData";
 
 // types
 import { TestResult } from "../types/index";

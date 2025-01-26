@@ -316,7 +316,10 @@ export const staticData = {
 
       this.length++;
       console.log(`Data is added in queue. Current size: ${this.length}`);
-
+      // if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      //   this._trigger();
+      //   console.log("sibal iphone");
+      // }
       if (this.length >= this.maxSize) {
         console.log("The queue is full. Triggering the process now.");
         this._trigger();
