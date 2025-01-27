@@ -13,16 +13,21 @@ import { useFuncs } from "../../funcs";
 // types
 import { Word, ReduxState } from "../../types";
 import { AxiosResponse } from "axios";
+
+// icon
+import { SiNaver } from "react-icons/si";
 interface CreateWordModalProps {
   isOpen: boolean;
   closeModal: () => void;
   list_id: string | undefined;
+  language: string;
 }
 
 const CreateWordModal: React.FC<CreateWordModalProps> = ({
   isOpen,
   closeModal,
   list_id,
+  language,
 }) => {
   // default
   const dispatch = useDispatch();
@@ -102,6 +107,25 @@ const CreateWordModal: React.FC<CreateWordModalProps> = ({
     }
   };
 
+  const handleDic = (word) => {
+    const encodedWord = encodeURIComponent(word);
+    let url: string | undefined;
+
+    if (language === "en") {
+      url = `https://en.dict.naver.com/#/search?query=${encodedWord}`;
+    } else if (language === "jp") {
+      url = `https://ja.dict.naver.com/#/search?query=${encodedWord}&range=all`;
+    } else if (language === "indo") {
+      url = `https://dict.naver.com/idkodict/#/search?query=${encodedWord}`;
+    }
+
+    if (url) {
+      window.open(url, "_blank");
+    } else {
+      console.error("not supported language");
+    }
+    console.log(word);
+  };
   // etc
   if (!isOpen) return null;
 
@@ -126,6 +150,16 @@ const CreateWordModal: React.FC<CreateWordModalProps> = ({
             onChange={(e) => setWord(e.target.value)}
             placeholder="Enter word"
           />
+          {word && (
+            <button
+              className="naver-dic-btn"
+              onClick={() => {
+                handleDic(word);
+              }}
+            >
+              <SiNaver />
+            </button>
+          )}
 
           <label htmlFor="meaning">Meaning</label>
           <input

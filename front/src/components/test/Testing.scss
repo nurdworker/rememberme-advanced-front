@@ -81,7 +81,7 @@
       margin: 10px;
       font-size: 16px;
       text-align: center;
-      width: 300px;
+      width: 250px;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
       p {
@@ -127,7 +127,7 @@
       position: fixed;
       left: 0px;
       bottom: 130px;
-      height: 300px;
+      height: 200px;
       width: 80px;
       display: flex;
       flex-direction: column;
@@ -139,8 +139,8 @@
       }
 
       .side-btn {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         background-color: #fff;
         border-radius: 50%;
         background-clip: padding-box;
@@ -155,7 +155,7 @@
         color: #4682b4;
         flex-direction: column;
         p {
-          font-size: 0.8em;
+          font-size: 0.6em;
           margin: 0;
         }
 
@@ -171,8 +171,8 @@
           z-index: -1;
         }
         &:hover {
-          width: 55px;
-          height: 55px;
+          width: 45px;
+          height: 45px;
           box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
           .icon {
             width: 25px;

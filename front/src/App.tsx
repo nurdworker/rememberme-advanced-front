@@ -115,12 +115,13 @@ const AppContent = () => {
   });
 
   useEffect(() => {
-    console.log("라우터가 변경되었습니다!", location.pathname);
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    console.log("router is changed!", location.pathname);
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
       saveListsQueueDataAtDb();
       saveWordsQueueDataAtDb();
     }
-  }, [location, saveListsQueueDataAtDb, saveWordsQueueDataAtDb]); // location이 변경될 때마다 실행
+  }, [location, saveListsQueueDataAtDb, saveWordsQueueDataAtDb]);
 
   // useEffects
   useEffect(() => {
@@ -190,10 +191,12 @@ const AppContent = () => {
                 <p>{userInfo.email}</p>
               </div>
               {!isSign ? null : (
-                <IoIosLogOut
-                  className="text-white text-3xl font-bold"
-                  onClick={handleSignOut}
-                />
+                <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14">
+                  <IoIosLogOut
+                    className="text-white text-2xl md:text-3xl"
+                    onClick={handleSignOut}
+                  />
+                </div>
               )}
             </div>
           ) : (

@@ -23,8 +23,8 @@
       border: none;
       cursor: pointer;
       border-radius: 5px;
-      font-size: 1.5em;
-      color: #4b3f72;
+      font-size: 1em;
+      color: #4b4b4b;
       box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
     }
   }
@@ -46,7 +46,7 @@
         width: 90%;
         background-color: rgba(255, 255, 255, 0.9);
         border-radius: 5px;
-        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); /* 수평, 수직, 흐림 반경, 색상 */
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
 
         .list-card-flag {
           width: 20%;
@@ -164,7 +164,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 30%;
+      width: 40%;
       padding: 12px 20px;
       background: linear-gradient(90deg, #4facfe, #00f2fe);
       color: #fff;
@@ -174,7 +174,7 @@
       transition: all 0.3s ease;
       cursor: pointer;
       border: none;
-      font-size: 1.5em;
+      font-size: 1.3em;
     }
 
     .preparation-btn:hover {

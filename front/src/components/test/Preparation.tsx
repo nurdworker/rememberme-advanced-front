@@ -302,7 +302,25 @@ const Preparation: React.FC = () => {
 
   return (
     <div className="container-preparation">
-      <nav className="preparation-nav">
+      {checkedLists.length === 0 ? null : (
+        <nav className="preparation-nav">
+          <div className="preparation-contents">
+            {checkedLists.map((item) => (
+              <div className="preparation-summary" key={item.list_id}>
+                <h5>{listTitle(item.list_id)}</h5>
+                {item.isIncorrect && <span>오답노트</span>}
+              </div>
+            ))}
+          </div>
+
+          <div className="preparation-btn" onClick={handleStartTest}>
+            <p>{totalWordsCount()} Words</p>
+            <p>Start Test!</p>
+          </div>
+        </nav>
+      )}
+
+      {/* <nav className="preparation-nav">
         <div className="preparation-contents">
           {checkedLists.length === 0 ? (
             <div className="empty-message">please select lists..</div>
@@ -320,7 +338,7 @@ const Preparation: React.FC = () => {
           <p>{totalWordsCount()} Words</p>
           <p>Start Test!</p>
         </div>
-      </nav>
+      </nav> */}
       <div className="preparation-title">Select test mode!</div>
       <div className="preparation-select-mode">
         <button

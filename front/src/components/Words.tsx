@@ -304,6 +304,7 @@ const Words = () => {
         isOpen={isCreateWordModalOpen}
         closeModal={toggleCreateWordModal}
         list_id={list_id}
+        language={list?.language}
       />
 
       <div className="list-header">

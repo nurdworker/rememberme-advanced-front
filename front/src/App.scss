@@ -24,7 +24,7 @@
       left: 0;
       right: 0;
       z-index: 50;
-      padding: 10px;
+      padding: 5px;
       background: linear-gradient(to right, #3b82f6, #9333ea, #ec4899);
       display: flex;
       justify-content: space-between;
@@ -67,14 +67,14 @@
     }
 
     .router_screen {
-      padding-bottom: 100px;
+      padding-bottom: 200px;
       margin-bottom: -50px;
       width: 100%;
       height: 100vh;
       background: linear-gradient(to bottom, #f0e5e5, #e4f7ff);
       position: relative;
       overflow-y: auto;
-      margin-top: calc(62px);
+      padding-top: calc(62px);
     }
 
     .test_zone_container {

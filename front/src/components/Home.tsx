@@ -71,13 +71,13 @@ const Home = () => {
   return (
     <div className={`container_home ${isMobile ? "mobile" : "desktop"}`}>
       {!isSign && (
-        <div>
+        <div className="hi-box">
           <GoogleLoginButton onClick={handleSign} />
 
           <img
             src="/rbm-introduction.webp"
             alt="Introduction"
-            style={{ width: "100%", height: "auto" }}
+            className="hi-img"
           />
         </div>
       )}
