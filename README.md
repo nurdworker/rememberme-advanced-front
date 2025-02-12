@@ -7,16 +7,16 @@ Contact: nurdworker@gmail.com
 
 ## Tech Stack
 
-- Frontend : React
+- Frontend : React, Tailwind, TypeScript, Redux
 - Backend: : Node.js, AWS SAM CLI
 - Database : MongoD
-- Cloud(AWS) : Lambda, API Gateway, Secrets Manager
+- Cloud(AWS) : Lambda, API Gateway, Secrets Manager, Api Gateway, SNS, Cloud Watch
 
 ## Development
 
 ### 🎬 Implementation Advanced Version Video:
 
-- <[https://www.youtube.com/watch?v=MEIIWAcPjt0]>
+- https://www.youtube.com/watch?v=MEIIWAcPjt0
 
 ### **Frontent Dev Environment**
 
@@ -40,6 +40,8 @@ npm install
 ```bash
 npm start
 ```
+
+### **Copy Right**
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to use, modify, and
