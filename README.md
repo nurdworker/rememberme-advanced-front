@@ -8,6 +8,10 @@ A serverless vocabulary memorization website built on AWS Lambda.
 Copyright (c) 2025 Nurd Worker. All rights reserved.
 Contact: nurdworker@gmail.com
 
+### 🎬 Implementation Advanced Version Video:
+
+- 🎥[Video Link_korean](https://www.youtube.com/watch?v=MEIIWAcPjt0)
+
 ## Tech Stack
 
 - Frontend : React, Tailwind, TypeScript, Redux
@@ -16,10 +20,6 @@ Contact: nurdworker@gmail.com
 - Cloud(AWS) : Lambda, API Gateway, Secrets Manager, Api Gateway, SNS, Cloud Watch
 
 ## Development
-
-### 🎬 Implementation Advanced Version Video:
-
-- 🎥[Video Link_korean](https://www.youtube.com/watch?v=MEIIWAcPjt0)
 
 ### **Frontent Dev Environment**
 
