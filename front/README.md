@@ -1,46 +1,72 @@
-# Getting Started with Create React App
+# Remember Me
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A serverless vocabulary memorization website built on AWS Lambda.
 
-## Available Scripts
+Copyright (c) 2025 Nurd Worker. All rights reserved.
+Contact: nurdworker@gmail.com
 
-In the project directory, you can run:
+## Tech Stack
 
-### `npm start`
+- Frontend : React
+- Backend: : Node.js, AWS SAM CLI
+- Database : MongoD
+- Cloud(AWS) : Lambda, API Gateway, Secrets Manager
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Development
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 🎬 Implementation Advanced Version Video:
 
-### `npm test`
+- <[https://youtu.be/y15djTDnXYg](https://www.youtube.com/watch?v=MEIIWAcPjt0)>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### **Frontent Dev Environment**
 
-### `npm run build`
+#### React Project Setup and Running Guide
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Clone my project repository**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone https://github.com/nurdworker/rememberme-advanced-front
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Install Dependencies and run**
+   Before starting the React project, you need to install the required dependencies. Run the following command:
 
-### `npm run eject`
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3. **Start the Application**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to use, modify, and
+distribute the Software under the following conditions:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+1. The Software may be used, modified, and distributed for **personal use only**.
+2. The Software may **not be used for any commercial purposes** or any business-related activities.
+3. The Software may **not be used in personal portfolios or any personal projects**.
+4. The Software may **not be redistributed for commercial purposes**.
 
-## Learn More
+Any use of the Software that does not comply with these conditions is strictly prohibited.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+이 소프트웨어 및 관련 문서 파일(이하 "소프트웨어")의 복사본을 얻은 모든 사람에게, 다음 조건에 따라 소프트웨어를 사용하고 수정하며 배포할 수 있는 권한이 부여됩니다:
+
+1. 소프트웨어는 **개인적인 용도에만** 사용하고 수정하며 배포할 수 있습니다.
+2. 소프트웨어는 **상업적 목적**이나 사업 관련 활동에 사용될 수 없습니다.
+3. 소프트웨어는 **개인 포트폴리오**나 **개인 프로젝트**에 사용될 수 없습니다.
+4. 소프트웨어는 **상업적 목적으로 재배포**할 수 없습니다.
+
+이 조건을 준수하지 않는 소프트웨어의 사용은 엄격히 금지됩니다.
+
+소프트웨어는 "있는 그대로" 제공되며, 명시적이거나 묵시적인 보증 없이 제공됩니다. 여기에는 상업성, 특정 목적에 대한 적합성 및 비침해에 대한 보증이 포함되나 이에 한정되지 않습니다. 저자나 저작권자는 소프트웨어의 사용 또는 기타 거래와 관련하여 발생하는 어떠한 청구, 손해 또는 기타 책임에 대해서도 책임지지 않습니다.

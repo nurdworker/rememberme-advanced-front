@@ -74,11 +74,44 @@ const Home = () => {
         <div className="hi-box">
           <GoogleLoginButton onClick={handleSign} />
 
-          <img
-            src="/rbm-introduction.webp"
-            alt="Introduction"
-            className="hi-img"
-          />
+          <div className="flex flex-col items-center text-center p-6 space-y-4">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+              🎉 Nurd Worker의{" "}
+              <span className="text-blue-500">Remember Me</span> 프로젝트에 오신
+              것을 환영합니다! 🎉
+            </h1>
+
+            <ul className="space-y-2 text-gray-700 text-lg">
+              <li>
+                ✅ 체험을 원하시는 분은{" "}
+                <span className="font-semibold text-blue-600">
+                  상단의 구글 로그인 버튼
+                </span>
+                을 클릭해서 체험하세요~
+              </li>
+              <li>
+                🎥 <span className="font-semibold">영상에서 사용 방법</span>이
+                나와있습니다.
+              </li>
+              <li>
+                ⚠️ 어느날 갑자기 사용이 안될 수도 있어요 ㅠ <br /> 돈 없는{" "}
+                <span className="text-red-500 font-bold">취준생</span>을
+                이해해주세요. 🙏
+              </li>
+            </ul>
+
+            {/* 유튜브 영상 추가 */}
+            <div className="w-full max-w-2xl pt-8">
+              <div className="aspect-w-16 aspect-h-9">
+                <iframe
+                  className="w-full h-full rounded-lg shadow-lg"
+                  src="https://www.youtube.com/embed/MEIIWAcPjt0"
+                  title="YouTube video"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {!isFetching && isSign && (
