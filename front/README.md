@@ -16,7 +16,7 @@ Contact: nurdworker@gmail.com
 
 ### 🎬 Implementation Advanced Version Video:
 
-- <[https://youtu.be/y15djTDnXYg](https://www.youtube.com/watch?v=MEIIWAcPjt0)>
+- <[https://www.youtube.com/watch?v=MEIIWAcPjt0]>
 
 ### **Frontent Dev Environment**
 

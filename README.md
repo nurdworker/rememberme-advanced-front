@@ -2,126 +2,71 @@
 
 A serverless vocabulary memorization website built on AWS Lambda.
 
-![Application Image](https://github.com/vocaAppServerless/.github/blob/main/assets/img/rememberme_app.png?raw=true)
+Copyright (c) 2025 Nurd Worker. All rights reserved.
+Contact: nurdworker@gmail.com
 
 ## Tech Stack
 
-- Frontend   : React
-- Backend:   : Node.js, AWS SAM CLI
-- Database   : MongoDB
-- CI/CD      : GitHub Actions
-- Cloud(AWS) : Lambda, API Gateway, S3, CloudFront, Route53, WAF, Parameter Store, Secrets Manager, Budgets, Chatbot
-- IaC        : Terraform(HCP Terraform)
-- Logging    : CloudWatch, Logstash, Elasticsearch, Kibana
-- ETC        : Git/GitHub, Slack, Notion
+- Frontend : React
+- Backend: : Node.js, AWS SAM CLI
+- Database : MongoD
+- Cloud(AWS) : Lambda, API Gateway, Secrets Manager
 
 ## Development
 
-> **⚠️ Note**: This repository is currently a demo version and is continuously being updated. Please refer to the [GitHub repository](https://github.com/nurdworker/rememberme) for the latest updates.  
+### 🎬 Implementation Advanced Version Video:
 
-### 🎬 Implementation Demo Video:  
+- <[https://www.youtube.com/watch?v=MEIIWAcPjt0]>
 
-- <https://youtu.be/y15djTDnXYg>
-  
 ### **Frontent Dev Environment**
 
 #### React Project Setup and Running Guide
 
-1. **Clone our project repository**
+1. **Clone my project repository**
+
 ```bash
-git clone https://github.com/vocaAppServerless/frontend.git
+git clone https://github.com/nurdworker/rememberme-advanced-front
 ```
+
 2. **Install Dependencies and run**
-Before starting the React project, you need to install the required dependencies. Run the following command:
+   Before starting the React project, you need to install the required dependencies. Run the following command:
+
 ```bash
 npm install
 ```
+
 3. **Start the Application**
+
 ```bash
 npm start
 ```
 
-### **Backend**
-1. **Clone our project repository**
-```bash
-git clone https://github.com/vocaAppServerless/backend.git
-```
-2. **Install AWS SAM CLI**
-- Windows
-  - Download the installer from the [AWS SAM CLI Download Page](https://aws.amazon.com/serverless/sam/).
-  -  Run the installer and follow the on-screen instructions.
-  - Add the installation path (usually `C:\Program Files\Amazon\AWSSAMCLI\bin`) to your `PATH` environment variable if not automatically configured.
-- macOS
-  - Install using Homebrew:
-   ```bash
-   brew install aws/tap/aws-sam-cli
-   ```
-3. **Build and Test API Gateway with Lambda**
-To build the API Gateway and Lambda environment using SAM, run:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to use, modify, and
+distribute the Software under the following conditions:
 
-```bash
-sam build --no-cached
-sam local start-api --env-vars ./env.json --no-cached
-```
-**env.json for SAM CLI**
-```json
-{
-  "<lambda-name-1>": {
-    "ENV_FIRST": "...",
-    "ENV_SECOND": "///"
-  },
-  "<lambda-name-2>": {
-    "ENV_FIRST": "...",
-    "ENV_SECOND": "///"
-  }
-}
-```
+1. The Software may be used, modified, and distributed for **personal use only**.
+2. The Software may **not be used for any commercial purposes** or any business-related activities.
+3. The Software may **not be used in personal portfolios or any personal projects**.
+4. The Software may **not be redistributed for commercial purposes**.
 
-The added warning ensures users understand that **environment variables** are **crucial** for the proper functioning of Lambda functions and must be specified correctly in the `env.json` file.
+Any use of the Software that does not comply with these conditions is strictly prohibited.
 
-## Infra
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
-**HCP Terraform** is integrated with a **VCS** (Version Control System) to provision and manage AWS resources through code. Using Infrastructure as Code (IaC) principles, all AWS resources are defined and versioned, ensuring consistency, repeatability, and ease of management.
+이 소프트웨어 및 관련 문서 파일(이하 "소프트웨어")의 복사본을 얻은 모든 사람에게, 다음 조건에 따라 소프트웨어를 사용하고 수정하며 배포할 수 있는 권한이 부여됩니다:
 
-### Demo
+1. 소프트웨어는 **개인적인 용도에만** 사용하고 수정하며 배포할 수 있습니다.
+2. 소프트웨어는 **상업적 목적**이나 사업 관련 활동에 사용될 수 없습니다.
+3. 소프트웨어는 **개인 포트폴리오**나 **개인 프로젝트**에 사용될 수 없습니다.
+4. 소프트웨어는 **상업적 목적으로 재배포**할 수 없습니다.
 
-**WAF Rule & Slack Alarm Demo**  
+이 조건을 준수하지 않는 소프트웨어의 사용은 엄격히 금지됩니다.
 
-- <https://youtu.be/S6AAgXVevEw?si=OiLR3wfE36uTpHYU>
-
-**HCP Terraform Demo**  
-
-- <https://youtu.be/zg9rhHcf8w0?si=A6rGs7k0rcp9nD0u>
-
-### Architecture
-
-![Architecture](https://github.com/vocaAppServerless/.github/blob/main/assets/img/architecture.png?raw=true)
-
-### CI/CD - [Backend]
-
-![Backend CI/CD](https://github.com/vocaAppServerless/.github/blob/main/assets/img/backend_ci_cd.png?raw=true)
-
-### CI/CD - [Frontend]
-
-![Frontend CI/CD](https://github.com/vocaAppServerless/.github/blob/main/assets/img/frontend_ci_cd.png?raw=true)
-
-### Logging
-
-- Leveraging CloudWatch Logs Subscription Filters to send log data to the ELK stack.
-- Using the Kibana dashboard, you can monitor logs by log group, status, and more, gaining insights into application performance and issues.
-
-![Logging Workflow](https://github.com/vocaAppServerless/.github/blob/main/assets/img/log_monitoring.png?raw=true)
-
-![Kibana Dashboard](https://github.com/vocaAppServerless/.github/blob/main/assets/img/kibana_dashboard.png?raw=true)
-
-### WAF Alarm
-
-![WAF Alarm Workflow](https://github.com/vocaAppServerless/.github/blob/main/assets/img/waf_alarm_workflow.jpg?raw=true)
-
-![WAF Alarm](https://github.com/vocaAppServerless/.github/blob/main/assets/img/waf_alarm.png?raw=true)
-
-### Budget Alarm
-
-![Budget Alarm Workflow](https://github.com/vocaAppServerless/.github/blob/main/assets/img/budget_alarm_workflow.jpg?raw=true)
-
-![Budget Alarm](https://github.com/vocaAppServerless/.github/blob/main/assets/img/budgets_alarm.png?raw=true)
+소프트웨어는 "있는 그대로" 제공되며, 명시적이거나 묵시적인 보증 없이 제공됩니다. 여기에는 상업성, 특정 목적에 대한 적합성 및 비침해에 대한 보증이 포함되나 이에 한정되지 않습니다. 저자나 저작권자는 소프트웨어의 사용 또는 기타 거래와 관련하여 발생하는 어떠한 청구, 손해 또는 기타 책임에 대해서도 책임지지 않습니다.
