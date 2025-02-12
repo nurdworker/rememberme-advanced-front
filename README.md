@@ -2,6 +2,9 @@
 
 A serverless vocabulary memorization website built on AWS Lambda.
 
+📢 한국인 분들은 블로그 보시면 됩니다. 훨씬 정리 잘 되어 있어요!
+👉 [블로그 링크](https://blog.nurd.work/357)
+
 Copyright (c) 2025 Nurd Worker. All rights reserved.
 Contact: nurdworker@gmail.com
 
@@ -16,7 +19,7 @@ Contact: nurdworker@gmail.com
 
 ### 🎬 Implementation Advanced Version Video:
 
-- https://www.youtube.com/watch?v=MEIIWAcPjt0
+- 🎥[Video Link Ko](https://www.youtube.com/watch?v=MEIIWAcPjt0)
 
 ### **Frontent Dev Environment**
 
