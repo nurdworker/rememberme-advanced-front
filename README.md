@@ -2,7 +2,7 @@
 
 A serverless vocabulary memorization website built on AWS Lambda.
 
-📢 한국인 분들은 블로그 보시면 됩니다. 훨씬 정리 잘 되어 있어요!
+📢 **한국인 분들은 블로그 보시면 됩니다. 훨씬 정리 잘 되어 있어요!**
 👉 [블로그 링크](https://blog.nurd.work/357)
 
 Copyright (c) 2025 Nurd Worker. All rights reserved.
@@ -12,14 +12,14 @@ Contact: nurdworker@gmail.com
 
 - Frontend : React, Tailwind, TypeScript, Redux
 - Backend: : Node.js, AWS SAM CLI
-- Database : MongoD
+- Database : MongoDB
 - Cloud(AWS) : Lambda, API Gateway, Secrets Manager, Api Gateway, SNS, Cloud Watch
 
 ## Development
 
 ### 🎬 Implementation Advanced Version Video:
 
-- 🎥[Video Link Ko](https://www.youtube.com/watch?v=MEIIWAcPjt0)
+- 🎥[Video Link_korean](https://www.youtube.com/watch?v=MEIIWAcPjt0)
 
 ### **Frontent Dev Environment**
 
@@ -44,7 +44,7 @@ npm install
 npm start
 ```
 
-### **Copy Right**
+## Copy Right
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to use, modify, and
